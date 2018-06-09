@@ -26,7 +26,7 @@ public class PotionScript : MonoBehaviour {
 
 	void OnMouseOver()
 	{
-		Debug.Log ("PotionScript.OnMouseOver()");
+		
 	}
 
 	void OnMouseExit()
@@ -34,4 +34,11 @@ public class PotionScript : MonoBehaviour {
         Cursor.SetCursor(null, Vector2.zero, cursorMode);
 		Debug.Log ("PotionScript.OnMouseExit()");
 	}
+
+    private void OnMouseDown()
+    {
+        //increase cost if not yet inspected
+        //show component description
+        Debug.Log("PotionScript.OnMouseDown()");
+    }
 }
