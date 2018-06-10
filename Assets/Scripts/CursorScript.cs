@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PotionScript : MonoBehaviour {
+public class CursorScript : MonoBehaviour {
 
     public Texture2D cursorClickableTexture;
     public CursorMode cursorMode = CursorMode.Auto;
@@ -10,7 +10,7 @@ public class PotionScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		Debug.Log ("PotionScript.start()");
+		Debug.Log ("CursorScript.start()");
 	}
 	
 	// Update is called once per frame
@@ -21,7 +21,7 @@ public class PotionScript : MonoBehaviour {
 	void OnMouseEnter()
 	{
         Cursor.SetCursor(cursorClickableTexture, hotSpot, cursorMode);
-        Debug.Log ("PotionScript.OnMouseEnter()");
+        Debug.Log ("CursorScript.OnMouseEnter()");
 	}
 
 	void OnMouseOver()
@@ -32,13 +32,13 @@ public class PotionScript : MonoBehaviour {
 	void OnMouseExit()
 	{
         Cursor.SetCursor(null, Vector2.zero, cursorMode);
-		Debug.Log ("PotionScript.OnMouseExit()");
+		Debug.Log ("CursorScript.OnMouseExit()");
 	}
 
     private void OnMouseDown()
     {
         //increase cost if not yet inspected
         //show component description
-        Debug.Log("PotionScript.OnMouseDown()");
+        Debug.Log("CursorScript.OnMouseDown()");
     }
 }
