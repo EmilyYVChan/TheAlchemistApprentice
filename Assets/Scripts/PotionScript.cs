@@ -1,30 +1,54 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PotionScript : MonoBehaviour {
 
-    public List<GameObject> inputs;
+    [System.Serializable]
+    public class ListWrapper
+    {
+        public List<GameObject> list;
+    }
+
+    public List<ListWrapper> inputs;
     public List<GameObject> outputs;
+    public List<GameObject> slashes;
+
+    public Text costTextUI;
 
     private SpriteRenderer spriteR;
 
-    public Image image;
+    private bool isAlreadyInspected;
 
+    private int costOfInspectionPerFormula = 1;
 
     // Use this for initialization
     void Start () {
-        foreach (GameObject gameObject in inputs)
+        isAlreadyInspected = false;
+
+        costTextUI = GameObject.Find("Cost").GetComponent<Text>();
+
+        foreach (ListWrapper listWrapper in inputs) 
         {
-            gameObject.SetActive(false);
+            List<GameObject> inputRow = listWrapper.list;
+            foreach (GameObject gameObject in inputRow)
+            {
+                gameObject.SetActive(false);
+            }                
         }
 
         foreach (GameObject gameObject in outputs)
         {
             gameObject.SetActive(false);
         }
-	}
+
+        foreach (GameObject gameObject in slashes)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -33,18 +57,36 @@ public class PotionScript : MonoBehaviour {
 
     void OnMouseDown()
     {
-        foreach (GameObject gameObject in inputs)
+        foreach (ListWrapper listWrapper in inputs)
         {
-            gameObject.SetActive(true);
+            List<GameObject> inputRow = listWrapper.list;
+            foreach (GameObject gameObject in inputRow)
+            {
+                gameObject.SetActive(true);
+            }
         }
 
         foreach (GameObject gameObject in outputs)
         {
             gameObject.SetActive(true);
-            spriteR = gameObject.GetComponent<SpriteRenderer>();
-            Sprite sprite = spriteR.sprite;
-            Sprite newSprite = Sprite.Create(sprite.texture, sprite.rect, sprite.pivot);
-            image.sprite = newSprite;
+        }
+
+        foreach (GameObject gameObject in slashes)
+        {
+            gameObject.SetActive(true);
+        }
+
+        if (!isAlreadyInspected)
+        {
+            Debug.Log("entered !isAlreadyInspected ");
+            string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
+            int oldCost = System.Int32.Parse(currentCostString);
+            Debug.Log("oldCost = " + oldCost);
+            int newCost = oldCost + (costOfInspectionPerFormula * outputs.Count);
+            Debug.Log("newCost = " + newCost);
+            string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
+            costTextUI.text = newCostString;
+            isAlreadyInspected = true;
         }
     }
 
