@@ -6,6 +6,6 @@ public class SceneLoader : MonoBehaviour
 
     public void loadScene(int sceneNumber)
     {
-        Application.LoadLevel(sceneNumber);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneNumber);
     }
 }
