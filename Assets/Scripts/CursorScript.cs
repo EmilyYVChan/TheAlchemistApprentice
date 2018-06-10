@@ -10,7 +10,7 @@ public class CursorScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		Debug.Log ("CursorScript.start()");
+
 	}
 	
 	// Update is called once per frame
@@ -34,11 +34,4 @@ public class CursorScript : MonoBehaviour {
         Cursor.SetCursor(null, Vector2.zero, cursorMode);
 		Debug.Log ("CursorScript.OnMouseExit()");
 	}
-
-    private void OnMouseDown()
-    {
-        //increase cost if not yet inspected
-        //show component description
-        Debug.Log("CursorScript.OnMouseDown()");
-    }
 }
