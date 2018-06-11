@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private static bool created = false;
-    public static int currentIteration;
+    public static int currentIterationCount;
 
     private string testingSceneName = "TutorialTestingScene";
 
@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
     private string testStageName = "Test";
 
     private Button nextStageButton;
-    private Text iterationCountText;
-    private Text currentStageText;
+    private Text iterationCountTextUI;
+    private Text currentStageTextUI;
 
     void Awake()
     {
@@ -40,22 +40,26 @@ public class GameManager : MonoBehaviour
 
     public void incrementIterationCount()
     {
-        currentIteration++;
+        currentIterationCount++;
     }
 
     public void resetIterationCount()
     {
-        currentIteration = 1;
+        currentIterationCount = 1;
     }
 
     // Use this for initialization
     void Start()
     {
-        iterationCountText = GameObject.Find("IterationCount").GetComponent<Text>();
-        currentStageText = GameObject.Find("Stage").GetComponent<Text>();
+        resetIterationCount();
+        iterationCountTextUI = GameObject.Find("IterationCount").GetComponent<Text>();
+        iterationCountTextUI.text = currentIterationCount.ToString();
+
+        currentStageTextUI = GameObject.Find("Stage").GetComponent<Text>();
+        currentStageTextUI.text = inspectStageName;
 
         nextStageButton = GameObject.Find("NextBtn").GetComponent<Button>();
-        updateNextStageButtonText(determineNextStage(currentStageText.text));
+        updateNextStageButtonText(determineNextStage(currentStageTextUI.text));
         nextStageButton.onClick.AddListener(goToNextStage);
 
         resetIterationCount();
@@ -69,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     void goToNextStage()
     {
-        string oldStage = currentStageText.text;
+        string oldStage = currentStageTextUI.text;
         string newStage = determineNextStage(oldStage);
 
         updateIterationCountIfAppropriate(newStage);
@@ -81,8 +85,8 @@ public class GameManager : MonoBehaviour
 
     private void updateTopPanelUI(string newStage)
     {
-        currentStageText.text = newStage;
-        iterationCountText.text = currentIteration.ToString();
+        currentStageTextUI.text = newStage;
+        iterationCountTextUI.text = currentIterationCount.ToString();
     }
 
     private void updateIterationCountIfAppropriate(string newStage)
