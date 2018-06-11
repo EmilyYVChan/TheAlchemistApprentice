@@ -17,4 +17,8 @@ public class DialogueScript : MonoBehaviour {
 		
 	}
 
+	public void hideDialogue()
+	{
+		dialogue.SetActive (false);
+	}
 }
