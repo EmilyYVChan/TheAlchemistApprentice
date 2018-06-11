@@ -24,6 +24,8 @@ public class PotionScript : MonoBehaviour {
 
     private int costOfInspectionPerFormula = 1;
 
+	public GameObject dialogue;
+
     // Use this for initialization
     void Start () {
         isAlreadyInspected = false;
@@ -88,7 +90,37 @@ public class PotionScript : MonoBehaviour {
             costTextUI.text = newCostString;
             isAlreadyInspected = true;
         }
+
+		// display formula in dialogue
+		UpdateDialogue ();
     }
+		
+	private void UpdateDialogue()
+	{
+		dialogue.SetActive (true);
+		Text dialogueText = dialogue.GetComponentInChildren<Text> ();
+		// reset text
+		dialogueText.text = "";
 
+		for (int i = 0; i < inputs.Count; i ++)
+		{
+			List<GameObject> formulaRow = inputs [i].list; 
 
+			// format inputs
+			for (int j = 0; j < formulaRow.Count; j ++)
+			{
+				GameObject input = formulaRow [j];
+				dialogueText.text += input;
+
+				if (j != formulaRow.Count - 1) 
+				{
+					dialogueText.text += " + ";
+				}
+			}
+
+			// format output
+			dialogueText.text += " -> ";
+			dialogueText.text += outputs [i] + "\n";
+		}
+	}
 }
