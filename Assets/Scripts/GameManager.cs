@@ -11,7 +11,12 @@ public class GameManager : MonoBehaviour
 
     private string testingSceneName = "TutorialTestingScene";
 
+    private string inspectStageName = "Inspect";
+    private string testStageName = "Test";
+
     private Button nextStageButton;
+    private Text iterationCountText;
+    private Text currentStageText;
 
     void Awake()
     {
@@ -30,7 +35,7 @@ public class GameManager : MonoBehaviour
 
     public void unloadTestingScene()
     {
-        SceneManager.UnloadScene(testingSceneName);
+        SceneManager.UnloadSceneAsync(testingSceneName);
     }
 
     public void incrementIterationCount()
@@ -46,8 +51,13 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        iterationCountText = GameObject.Find("IterationCount").GetComponent<Text>();
+        currentStageText = GameObject.Find("Stage").GetComponent<Text>();
+
         nextStageButton = GameObject.Find("NextBtn").GetComponent<Button>();
-        nextStageButton.onClick.AddListener(updateNextStageButton);
+        updateNextStageButtonText(determineNextStage(currentStageText.text));
+        nextStageButton.onClick.AddListener(goToNextStage);
+
         resetIterationCount();
     }
 
@@ -57,17 +67,39 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void updateNextStageButton()
+    void goToNextStage()
     {
-        Debug.Log("UpdateNextStageButton invoked");
-        string btnText = nextStageButton.GetComponentInChildren<Text>().text;
-        Debug.Log("btnText = " + btnText);
-        if (btnText.Equals("Test"))
+        string oldStage = currentStageText.text;
+        string newStage = determineNextStage(oldStage);
+
+        updateIterationCountIfAppropriate(newStage);
+
+        updateTopPanelUI(newStage);
+
+        updateNextStageButtonText(oldStage);
+    }
+
+    private void updateTopPanelUI(string newStage)
+    {
+        currentStageText.text = newStage;
+        iterationCountText.text = currentIteration.ToString();
+    }
+
+    private void updateIterationCountIfAppropriate(string newStage)
+    {
+        if (newStage.Equals(inspectStageName))
         {
-            nextStageButton.GetComponentInChildren<Text>().text = "Inspect";
-        } else
-        {
-            nextStageButton.GetComponentInChildren<Text>().text = "Test";
+            incrementIterationCount();
         }
+    }
+
+    private void updateNextStageButtonText(string newText)
+    {
+        nextStageButton.GetComponentInChildren<Text>().text = newText;
+    }
+
+    private string determineNextStage(string currentStage)
+    { 
+        return (currentStage.Equals(inspectStageName)) ? testStageName : inspectStageName;
     }
 }
