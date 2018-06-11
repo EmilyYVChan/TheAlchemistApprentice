@@ -21,7 +21,6 @@ public class CursorScript : MonoBehaviour {
 	void OnMouseEnter()
 	{
         Cursor.SetCursor(cursorClickableTexture, hotSpot, cursorMode);
-        Debug.Log ("CursorScript.OnMouseEnter()");
 	}
 
 	void OnMouseOver()
@@ -32,6 +31,5 @@ public class CursorScript : MonoBehaviour {
 	void OnMouseExit()
 	{
         Cursor.SetCursor(null, Vector2.zero, cursorMode);
-		Debug.Log ("CursorScript.OnMouseExit()");
 	}
 }
