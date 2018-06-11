@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class PotionScript : MonoBehaviour {
 
@@ -16,6 +17,9 @@ public class PotionScript : MonoBehaviour {
     public List<GameObject> outputs;
     public List<GameObject> slashes;
 
+	public Sprite addSprite;
+	public Sprite equalSprite;
+
     private Text costTextUI;
 
     private SpriteRenderer spriteR;
@@ -23,6 +27,8 @@ public class PotionScript : MonoBehaviour {
     private bool isAlreadyInspected;
 
     private int costOfInspectionPerFormula = 1;
+
+	public GameObject dialogue;
 
     // Use this for initialization
     void Start () {
@@ -88,7 +94,56 @@ public class PotionScript : MonoBehaviour {
             costTextUI.text = newCostString;
             isAlreadyInspected = true;
         }
+
+		// display formula in dialogue
+		UpdateDialogue ();
     }
+		
+	private void UpdateDialogue()
+	{
+		dialogue.SetActive (true);
 
+		/**Transform originalAnchorPosition = GameObject.Find ("Anchor").transform;
+		Transform anchorPosition = originalAnchorPosition;
 
+		foreach (Transform child in dialogue.transform)
+		{
+			GameObject.Destroy (child.gameObject);
+		}
+		// reset text
+		for (int i = 0; i < inputs.Count; i ++)
+		{
+			List<GameObject> formulaRow = inputs [i].list; 
+
+			// format inputs
+			for (int j = 0; j < formulaRow.Count; j ++)
+			{
+				GameObject input = formulaRow [j];
+
+				GameObject formulaInput = new GameObject ("Input" + j);
+				formulaInput.AddComponent<SpriteRenderer> ().sprite = input.GetComponent<SpriteRenderer> ().sprite;
+				formulaInput.transform.SetParent (dialogue.transform);
+				formulaInput.transform.position = new Vector2 (originalAnchorPosition.position.x + (0.5f * (j+1)), anchorPosition.position.y);
+				anchorPosition = formulaInput.transform;
+
+				if (j != formulaRow.Count - 1) 
+				{
+					GameObject add = new GameObject ("Add");
+					add.AddComponent<SpriteRenderer> ().sprite = addSprite;
+					add.transform.SetParent (dialogue.transform);
+					add.transform.position = new Vector2 (anchorPosition.position.x + 0.5f, anchorPosition.position.y);
+					anchorPosition = add.transform;
+				}
+			}
+
+			// format output
+			GameObject equal = new GameObject ("Equal");
+			equal.AddComponent<SpriteRenderer> ().sprite = equalSprite;
+			equal.transform.SetParent (dialogue.transform);
+			equal.transform.position = new Vector2 (anchorPosition.position.x + 0.5f, anchorPosition.position.y);
+
+			anchorPosition.transform.position = new Vector2 (originalAnchorPosition.position.x, originalAnchorPosition.position.y + 0.7f);
+
+		}**/
+	}
 }
