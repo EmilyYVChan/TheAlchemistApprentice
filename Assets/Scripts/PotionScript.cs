@@ -16,7 +16,7 @@ public class PotionScript : MonoBehaviour {
     public List<GameObject> outputs;
     public List<GameObject> slashes;
 
-    public Text costTextUI;
+    private Text costTextUI;
 
     private SpriteRenderer spriteR;
 
@@ -82,7 +82,7 @@ public class PotionScript : MonoBehaviour {
             string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
             int oldCost = System.Int32.Parse(currentCostString);
             Debug.Log("oldCost = " + oldCost);
-            int newCost = oldCost + (costOfInspectionPerFormula * outputs.Count);
+            int newCost = oldCost + (costOfInspectionPerFormula * inputs.Count);
             Debug.Log("newCost = " + newCost);
             string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
             costTextUI.text = newCostString;
