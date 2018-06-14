@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class CursorScript : MonoBehaviour {
@@ -20,7 +21,10 @@ public class CursorScript : MonoBehaviour {
 
 	void OnMouseEnter()
 	{
-        Cursor.SetCursor(cursorClickableTexture, hotSpot, cursorMode);
+		Button button = this.GetComponent<Button> ();
+		if ((button == null) || button.interactable) {
+			Cursor.SetCursor(cursorClickableTexture, hotSpot, cursorMode);
+		}
 	}
 
 	void OnMouseOver()

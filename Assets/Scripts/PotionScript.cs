@@ -98,6 +98,9 @@ public class PotionScript : MonoBehaviour {
 
 		// display formula in dialogue
 		UpdateDialogue ();
+
+		// disable buttons behind the dialogue
+		DisableButtons();
     }
 		
 	private void UpdateDialogue()
@@ -109,7 +112,7 @@ public class PotionScript : MonoBehaviour {
 		{
 			if (child.gameObject.tag.Equals("Formula"))
 			{
-					child.gameObject.SetActive (false);
+				child.gameObject.SetActive (false);
 			}
 		}
 
@@ -162,5 +165,15 @@ public class PotionScript : MonoBehaviour {
 			anchorPosition.transform.position = new Vector2 (originalAnchorPosition.position.x, originalAnchorPosition.position.y + 0.7f);
 
 		}**/
+	}
+
+	private void DisableButtons()
+	{
+		Button exitBtn = GameObject.Find ("ExitBtn").GetComponent<Button>();
+		exitBtn.interactable = false;
+		Button diagnoseBtn = GameObject.Find ("DiagnoseBtn").GetComponent<Button>();
+		diagnoseBtn.interactable = false;
+		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
+		nextBtn.interactable = false;
 	}
 }
