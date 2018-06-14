@@ -107,7 +107,10 @@ public class PotionScript : MonoBehaviour {
 		// clear existing children
 		foreach (Transform child in dialogue.transform)
 		{
-			child.gameObject.SetActive (false);
+			if (child.gameObject.tag.Equals("Formula"))
+			{
+					child.gameObject.SetActive (false);
+			}
 		}
 
 		foreach (GameObject formula in formulae)
