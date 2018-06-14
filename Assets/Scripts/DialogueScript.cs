@@ -17,8 +17,19 @@ public class DialogueScript : MonoBehaviour {
 		
 	}
 
-	public void hideDialogue()
+	public void HideDialogue()
 	{
 		dialogue.SetActive (false);
+		EnableButtons ();
+	}
+
+	private void EnableButtons()
+	{
+		Button exitBtn = GameObject.Find ("ExitBtn").GetComponent<Button>();
+		exitBtn.interactable = true;
+		Button diagnoseBtn = GameObject.Find ("DiagnoseBtn").GetComponent<Button>();
+		diagnoseBtn.interactable = true;
+		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
+		nextBtn.interactable = true;
 	}
 }
