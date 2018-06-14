@@ -16,12 +16,9 @@ public class PotionScript : MonoBehaviour {
     public List<GameObject> outputs;
     public List<GameObject> slashes;
 
-	public Sprite addSprite;
-	public Sprite equalSprite;
+	public List<GameObject> formulae;
 
     private Text costTextUI;
-
-    private SpriteRenderer spriteR;
 
     private bool isAlreadyInspected;
 
@@ -53,6 +50,11 @@ public class PotionScript : MonoBehaviour {
         {
             gameObject.SetActive(false);
         }
+
+		foreach (GameObject formula in formulae)
+		{
+			formula.SetActive (false);
+		}
     }
 	
 	// Update is called once per frame
@@ -101,6 +103,22 @@ public class PotionScript : MonoBehaviour {
 	private void UpdateDialogue()
 	{
 		dialogue.SetActive (true);
+
+		// clear existing children
+		foreach (Transform child in dialogue.transform)
+		{
+			if (child.gameObject.tag.Equals("Formula"))
+			{
+					child.gameObject.SetActive (false);
+			}
+		}
+
+		foreach (GameObject formula in formulae)
+		{
+			formula.SetActive (true);
+			formula.transform.SetParent(dialogue.transform);
+		}
+
 
 		/**Transform originalAnchorPosition = GameObject.Find ("Anchor").transform;
 		Transform anchorPosition = originalAnchorPosition;
