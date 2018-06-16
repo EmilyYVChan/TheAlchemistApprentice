@@ -20,40 +20,48 @@ public class PotionScript : MonoBehaviour {
 
     private Text costTextUI;
 
-    private bool isAlreadyInspected;
-
     private int costOfInspectionPerFormula = 1;
 
 	public GameObject dialogue;
 
+	private static bool created = false;
+
+	void Awake()
+	{
+		if (!created) {
+			DontDestroyOnLoad (this.gameObject);
+			created = true;
+			Debug.Log ("Awake: " + this.gameObject);
+		} 
+		else {
+			
+		}
+	}
+
     // Use this for initialization
     void Start () {
-        isAlreadyInspected = false;
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
+		Debug.Log ("ispected " + LevelData.isPotionInspected (this.gameObject.name));
+		if (!LevelData.isPotionInspected (this.gameObject.name)) {
+			foreach (ListWrapper listWrapper in inputs) {
+				List<GameObject> inputRow = listWrapper.list;
+				foreach (GameObject gameObject in inputRow) {
+					gameObject.SetActive (false);
+				}                
+			}
 
-        foreach (ListWrapper listWrapper in inputs) 
-        {
-            List<GameObject> inputRow = listWrapper.list;
-            foreach (GameObject gameObject in inputRow)
-            {
-                gameObject.SetActive(false);
-            }                
-        }
+			foreach (GameObject gameObject in outputs) {
+				gameObject.SetActive (false);
+			}
 
-        foreach (GameObject gameObject in outputs)
-        {
-            gameObject.SetActive(false);
-        }
+			foreach (GameObject gameObject in slashes) {
+				gameObject.SetActive (false);
+			}
 
-        foreach (GameObject gameObject in slashes)
-        {
-            gameObject.SetActive(false);
-        }
-
-		foreach (GameObject formula in formulae)
-		{
-			formula.SetActive (false);
+			foreach (GameObject formula in formulae) {
+				formula.SetActive (false);
+			}
 		}
     }
 	
@@ -83,9 +91,10 @@ public class PotionScript : MonoBehaviour {
             gameObject.SetActive(true);
         }
 
-        if (!isAlreadyInspected)
+		if (!LevelData.isPotionInspected(this.gameObject.name))
         {
             LevelData.addCost(costOfInspectionPerFormula * inputs.Count);
+			LevelData.addInspectedPotion (this.gameObject.name);
             //Debug.Log("entered !isAlreadyInspected ");
             //string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
             //int oldCost = System.Int32.Parse(currentCostString);
@@ -94,7 +103,6 @@ public class PotionScript : MonoBehaviour {
             //Debug.Log("newCost = " + newCost);
             //string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
             //costTextUI.text = newCostString;
-            isAlreadyInspected = true;
         }
 
 		// display formula in dialogue
@@ -122,50 +130,6 @@ public class PotionScript : MonoBehaviour {
 			formula.SetActive (true);
 			formula.transform.SetParent(dialogue.transform);
 		}
-
-
-		/**Transform originalAnchorPosition = GameObject.Find ("Anchor").transform;
-		Transform anchorPosition = originalAnchorPosition;
-
-		foreach (Transform child in dialogue.transform)
-		{
-			GameObject.Destroy (child.gameObject);
-		}
-		// reset text
-		for (int i = 0; i < inputs.Count; i ++)
-		{
-			List<GameObject> formulaRow = inputs [i].list; 
-
-			// format inputs
-			for (int j = 0; j < formulaRow.Count; j ++)
-			{
-				GameObject input = formulaRow [j];
-
-				GameObject formulaInput = new GameObject ("Input" + j);
-				formulaInput.AddComponent<SpriteRenderer> ().sprite = input.GetComponent<SpriteRenderer> ().sprite;
-				formulaInput.transform.SetParent (dialogue.transform);
-				formulaInput.transform.position = new Vector2 (originalAnchorPosition.position.x + (0.5f * (j+1)), anchorPosition.position.y);
-				anchorPosition = formulaInput.transform;
-
-				if (j != formulaRow.Count - 1) 
-				{
-					GameObject add = new GameObject ("Add");
-					add.AddComponent<SpriteRenderer> ().sprite = addSprite;
-					add.transform.SetParent (dialogue.transform);
-					add.transform.position = new Vector2 (anchorPosition.position.x + 0.5f, anchorPosition.position.y);
-					anchorPosition = add.transform;
-				}
-			}
-
-			// format output
-			GameObject equal = new GameObject ("Equal");
-			equal.AddComponent<SpriteRenderer> ().sprite = equalSprite;
-			equal.transform.SetParent (dialogue.transform);
-			equal.transform.position = new Vector2 (anchorPosition.position.x + 0.5f, anchorPosition.position.y);
-
-			anchorPosition.transform.position = new Vector2 (originalAnchorPosition.position.x, originalAnchorPosition.position.y + 0.7f);
-
-		}**/
 	}
 
 	private void DisableButtons()
