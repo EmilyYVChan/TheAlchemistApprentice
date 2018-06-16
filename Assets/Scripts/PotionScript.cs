@@ -85,14 +85,15 @@ public class PotionScript : MonoBehaviour {
 
         if (!isAlreadyInspected)
         {
-            Debug.Log("entered !isAlreadyInspected ");
-            string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
-            int oldCost = System.Int32.Parse(currentCostString);
-            Debug.Log("oldCost = " + oldCost);
-            int newCost = oldCost + (costOfInspectionPerFormula * inputs.Count);
-            Debug.Log("newCost = " + newCost);
-            string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
-            costTextUI.text = newCostString;
+            LevelData.addCost(costOfInspectionPerFormula * inputs.Count);
+            //Debug.Log("entered !isAlreadyInspected ");
+            //string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
+            //int oldCost = System.Int32.Parse(currentCostString);
+            //Debug.Log("oldCost = " + oldCost);
+            //int newCost = oldCost + (costOfInspectionPerFormula * inputs.Count);
+            //Debug.Log("newCost = " + newCost);
+            //string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
+            //costTextUI.text = newCostString;
             isAlreadyInspected = true;
         }
 
