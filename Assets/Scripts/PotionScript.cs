@@ -28,21 +28,21 @@ public class PotionScript : MonoBehaviour {
 
 	void Awake()
 	{
-		if (!created) {
-			DontDestroyOnLoad (this.gameObject);
-			created = true;
-			Debug.Log ("Awake: " + this.gameObject);
-		} 
-		else {
-			
-		}
+//		if (!created) {
+//			DontDestroyOnLoad (this.gameObject);
+//			created = true;
+//			Debug.Log ("Awake: " + this.gameObject);
+//		} 
+//		else {
+//			
+		//}
 	}
 
     // Use this for initialization
-    void Start () {
+	public virtual void Start () {
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
-		Debug.Log ("ispected " + LevelData.isPotionInspected (this.gameObject.name));
+		Debug.Log ("ispected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
 		if (!LevelData.isPotionInspected (this.gameObject.name)) {
 			foreach (ListWrapper listWrapper in inputs) {
 				List<GameObject> inputRow = listWrapper.list;
@@ -66,11 +66,11 @@ public class PotionScript : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	public void Update () {
 		
 	}
 
-    void OnMouseDown()
+    public virtual void OnMouseDown()
     {
         foreach (ListWrapper listWrapper in inputs)
         {
