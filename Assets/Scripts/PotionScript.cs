@@ -24,20 +24,6 @@ public class PotionScript : MonoBehaviour {
 
 	public GameObject dialogue;
 
-	private static bool created = false;
-
-	void Awake()
-	{
-//		if (!created) {
-//			DontDestroyOnLoad (this.gameObject);
-//			created = true;
-//			Debug.Log ("Awake: " + this.gameObject);
-//		} 
-//		else {
-//			
-		//}
-	}
-
     // Use this for initialization
 	public virtual void Start () {
 
@@ -47,16 +33,22 @@ public class PotionScript : MonoBehaviour {
 			foreach (ListWrapper listWrapper in inputs) {
 				List<GameObject> inputRow = listWrapper.list;
 				foreach (GameObject gameObject in inputRow) {
-					gameObject.SetActive (false);
+					if (!gameObject.tag.Equals ("IO")) {
+						gameObject.SetActive (false);
+					}
 				}                
 			}
 
 			foreach (GameObject gameObject in outputs) {
-				gameObject.SetActive (false);
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (false);
+				}
 			}
 
 			foreach (GameObject gameObject in slashes) {
-				gameObject.SetActive (false);
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (false);
+				}
 			}
 
 			foreach (GameObject formula in formulae) {
