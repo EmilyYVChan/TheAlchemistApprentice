@@ -16,6 +16,11 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene(inspectSceneName);
         LevelData.incrementIteration();
+
+        if (LevelData.getCurrentIteration() == 2)
+        {
+            TutorialManager.setIsSecondIteration();
+        }
     }
 
     public void loadTutorialExecuteScene()
