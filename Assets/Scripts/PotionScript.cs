@@ -13,7 +13,7 @@ public class PotionScript : MonoBehaviour {
     }
 
     public List<ListWrapper> inputs;
-    public List<GameObject> outputs;
+	public List<ListWrapper> outputs;
     public List<GameObject> slashes;
 
 	public List<GameObject> formulae;
@@ -28,60 +28,57 @@ public class PotionScript : MonoBehaviour {
 	public virtual void Start () {
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
-		Debug.Log ("ispected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
+		//Debug.Log ("inspected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
+
 		if (!LevelData.isPotionInspected (this.gameObject.name)) {
-			foreach (ListWrapper listWrapper in inputs) {
-				List<GameObject> inputRow = listWrapper.list;
-				foreach (GameObject gameObject in inputRow) {
-					if (!gameObject.tag.Equals ("IO")) {
-						gameObject.SetActive (false);
-					}
-				}                
-			}
-
-			foreach (GameObject gameObject in outputs) {
-				if (!gameObject.tag.Equals ("IO")) {
-					gameObject.SetActive (false);
-				}
-			}
-
-			foreach (GameObject gameObject in slashes) {
-				if (!gameObject.tag.Equals ("IO")) {
-					gameObject.SetActive (false);
-				}
-			}
+			HideAndShowInputsOutputs (false);
 
 			foreach (GameObject formula in formulae) {
 				formula.SetActive (false);
 			}
+		} else {
+			HideAndShowInputsOutputs (true);
+
+			foreach (GameObject formula in formulae) {
+				formula.SetActive (true);
+			}
 		}
-    }
+	}
 	
 	// Update is called once per frame
 	public void Update () {
 		
 	}
 
+	public void HideAndShowInputsOutputs(bool isVisible){
+		foreach (ListWrapper listWrapper in inputs) {
+			List<GameObject> inputRow = listWrapper.list;
+			foreach (GameObject gameObject in inputRow) {
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (isVisible);
+				}
+			}                
+		}
+
+		foreach (ListWrapper listWrapper in outputs) {
+			List<GameObject> outputRow = listWrapper.list;
+			foreach (GameObject gameObject in outputRow) {
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (isVisible);
+				}
+			}                
+		}
+//
+//		foreach (GameObject gameObject in slashes) {
+//			if (!gameObject.tag.Equals ("IO")) {
+//				gameObject.SetActive (isVisible);
+//			}
+//		}
+	}
+
     public virtual void OnMouseDown()
     {
-        foreach (ListWrapper listWrapper in inputs)
-        {
-            List<GameObject> inputRow = listWrapper.list;
-            foreach (GameObject gameObject in inputRow)
-            {
-                gameObject.SetActive(true);
-            }
-        }
-
-        foreach (GameObject gameObject in outputs)
-        {
-            gameObject.SetActive(true);
-        }
-
-        foreach (GameObject gameObject in slashes)
-        {
-            gameObject.SetActive(true);
-        }
+		HideAndShowInputsOutputs (true);
 
 		if (!LevelData.isPotionInspected(this.gameObject.name))
         {
@@ -133,4 +130,5 @@ public class PotionScript : MonoBehaviour {
 		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
 		nextBtn.interactable = false;
 	}
+
 }
