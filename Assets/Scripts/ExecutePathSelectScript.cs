@@ -110,7 +110,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 		if (potionStepCount == pathObjects.Count) {
 			runOneStepBtn.interactable = false;
 		}
-	}
+
+        LevelData.addCost(1);
+    }
 
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
 		previousOutputs.Clear ();
