@@ -28,18 +28,49 @@ public class PotionScript : MonoBehaviour {
 	public virtual void Start () {
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
-		Debug.Log ("inspected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
+		//Debug.Log ("inspected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
 
 		if (!LevelData.isPotionInspected (this.gameObject.name)) {
 			HideAndShowInputsOutputs (false);
+
+			foreach (GameObject formula in formulae) {
+				formula.SetActive (false);
+			}
 		} else {
 			HideAndShowInputsOutputs (true);
+
+			foreach (GameObject formula in formulae) {
+				formula.SetActive (true);
+			}
 		}
 	}
 	
 	// Update is called once per frame
 	public void Update () {
 		
+	}
+
+	public void HideAndShowInputsOutputs(bool isVisible){
+		foreach (ListWrapper listWrapper in inputs) {
+			List<GameObject> inputRow = listWrapper.list;
+			foreach (GameObject gameObject in inputRow) {
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (isVisible);
+				}
+			}                
+		}
+
+		foreach (GameObject gameObject in outputs) {
+			if (!gameObject.tag.Equals ("IO")) {
+				gameObject.SetActive (isVisible);
+			}
+		}
+
+		foreach (GameObject gameObject in slashes) {
+			if (!gameObject.tag.Equals ("IO")) {
+				gameObject.SetActive (isVisible);
+			}
+		}
 	}
 
     public virtual void OnMouseDown()
@@ -114,30 +145,4 @@ public class PotionScript : MonoBehaviour {
 		nextBtn.interactable = false;
 	}
 
-	private void HideAndShowInputsOutputs(bool isVisible){
-		foreach (ListWrapper listWrapper in inputs) {
-			List<GameObject> inputRow = listWrapper.list;
-			foreach (GameObject gameObject in inputRow) {
-				if (!gameObject.tag.Equals ("IO")) {
-					gameObject.SetActive (isVisible);
-				}
-			}                
-		}
-
-		foreach (GameObject gameObject in outputs) {
-			if (!gameObject.tag.Equals ("IO")) {
-				gameObject.SetActive (isVisible);
-			}
-		}
-
-		foreach (GameObject gameObject in slashes) {
-			if (!gameObject.tag.Equals ("IO")) {
-				gameObject.SetActive (isVisible);
-			}
-		}
-
-		foreach (GameObject formula in formulae) {
-			formula.SetActive (isVisible);
-		}
-	}
 }
