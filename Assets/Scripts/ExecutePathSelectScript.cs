@@ -11,10 +11,13 @@ public class ExecutePathSelectScript : MonoBehaviour
 	public int pathIndex;
 
 	private int potionStepCount = 0;
+	private List<Sprite> previousOutputs = new List<Sprite>();
+	private Button runOneStepBtn;
 
 	// Use this for initialization
 	void Start ()
 	{
+		runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
 		if (!isDefault) {
 			// render input semi-transparent if this input is not default
 			this.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, .4f);
@@ -22,6 +25,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 		else {
 			// highlight the associated control flow path if this input is default
 			ChangePipeColour(pathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
+
+			// set RunStepBtn with THIS gameObject
+			runOneStepBtn.onClick.AddListener (RunOneStep);
 		}
 	}
 	
@@ -51,11 +57,12 @@ public class ExecutePathSelectScript : MonoBehaviour
 		ChangePipeColour(pathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
 
 		// set RunStepBtn with THIS gameObject
-		Button runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
+		runOneStepBtn.onClick.RemoveAllListeners();
 		runOneStepBtn.onClick.AddListener (RunOneStep);
 
 		// clear step count whenever a new path is selected
 		potionStepCount = 0;
+		runOneStepBtn.interactable = true;
 	}
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
@@ -77,26 +84,67 @@ public class ExecutePathSelectScript : MonoBehaviour
 		potion.HideAndShowInputsOutputs(false);
 
 		// display actual inputs and outputs
-
-		if (potionStepCount == 1) {
+		int matchingIndex = -1;
+		if (potionStepCount == 0) {
 			// output of first potion depends on the pathIndex
-
-			List<GameObject> actualInputs = potion.actualInputs [pathIndex].list;
-			foreach (GameObject actualInput in actualInputs) {
-				actualInput.SetActive (true);
-			}
-
-			List<GameObject> actualOutputs = potion.actualOutputs [pathIndex].list;
-			foreach (GameObject actualOutput in actualOutputs) {
-				actualOutput.SetActive (true);
-			}
-
+			matchingIndex = pathIndex;
+		
 		} else {
 			// non-first potions only receive one input when executed which can be determined by matching previous output
+			List<PotionScript.ListWrapper> actualInputs = potion.actualInputs;
 
+			for (int i =0; i < actualInputs.Count; i++){
+				
+				List<GameObject> actualInput = actualInputs[i].list;
+				if (MatchInputOutput (actualInput)) {
+					matchingIndex = i; 
+					break;
+				}
+			}
 		}
 
+		DisplayAndSetInputOutput (potion, matchingIndex);
+
+		// increase step count and check if further steps are allowed
 		potionStepCount ++;
+		if (potionStepCount == pathObjects.Count) {
+			runOneStepBtn.interactable = false;
+		}
+	}
+
+	private void DisplayAndSetInputOutput(ExecutePotionScript potion, int index){
+		previousOutputs.Clear ();
+
+		Debug.Log ("index : " + index);
+		Debug.Log ("length : " + potion.actualInputs.Count);
+
+
+		List<GameObject> actualInputs = potion.actualInputs [index].list;
+		foreach (GameObject actualInput in actualInputs) {
+			actualInput.SetActive (true);
+			actualInput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
+		}
+
+		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
+		foreach (GameObject actualOutput in actualOutputs) {
+			actualOutput.SetActive (true);
+			actualOutput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
+
+			// add sprite to previousOutput
+			Sprite sprite = actualOutput.GetComponent<SpriteRenderer>().sprite;
+			previousOutputs.Add (sprite);
+		}
+	}
+
+	private bool MatchInputOutput(List<GameObject> inputs){
+
+		foreach (GameObject input in inputs) {
+			Sprite sprite = input.GetComponent<SpriteRenderer>().sprite;
+			if (!previousOutputs.Contains(sprite)){
+				return false;
+			}
+		}
+		return true;
 	}
 }
 
