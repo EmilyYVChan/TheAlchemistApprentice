@@ -13,7 +13,7 @@ public class PotionScript : MonoBehaviour {
     }
 
     public List<ListWrapper> inputs;
-    public List<GameObject> outputs;
+	public List<ListWrapper> outputs;
     public List<GameObject> slashes;
 
 	public List<GameObject> formulae;
@@ -60,10 +60,13 @@ public class PotionScript : MonoBehaviour {
 			}                
 		}
 
-		foreach (GameObject gameObject in outputs) {
-			if (!gameObject.tag.Equals ("IO")) {
-				gameObject.SetActive (isVisible);
-			}
+		foreach (ListWrapper listWrapper in outputs) {
+			List<GameObject> outputRow = listWrapper.list;
+			foreach (GameObject gameObject in outputRow) {
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (isVisible);
+				}
+			}                
 		}
 
 		foreach (GameObject gameObject in slashes) {
@@ -75,24 +78,7 @@ public class PotionScript : MonoBehaviour {
 
     public virtual void OnMouseDown()
     {
-        foreach (ListWrapper listWrapper in inputs)
-        {
-            List<GameObject> inputRow = listWrapper.list;
-            foreach (GameObject gameObject in inputRow)
-            {
-                gameObject.SetActive(true);
-            }
-        }
-
-        foreach (GameObject gameObject in outputs)
-        {
-            gameObject.SetActive(true);
-        }
-
-        foreach (GameObject gameObject in slashes)
-        {
-            gameObject.SetActive(true);
-        }
+		HideAndShowInputsOutputs (true);
 
 		if (!LevelData.isPotionInspected(this.gameObject.name))
         {

@@ -86,10 +86,14 @@ public class ExecutePathSelectScript : MonoBehaviour
 				actualInput.SetActive (true);
 			}
 
-			GameObject actualOutput = potion.actualOutputs [pathIndex];
-			actualOutput.SetActive (true);
+			List<GameObject> actualOutputs = potion.actualOutputs [pathIndex].list;
+			foreach (GameObject actualOutput in actualOutputs) {
+				actualOutput.SetActive (true);
+			}
+
 		} else {
 			// non-first potions only receive one input when executed which can be determined by matching previous output
+
 		}
 
 		potionStepCount ++;

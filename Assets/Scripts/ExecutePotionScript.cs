@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ExecutePotionScript : PotionScript
 {
 	public List<ListWrapper> actualInputs;
-	public List<GameObject> actualOutputs;
+	public List<ListWrapper> actualOutputs;
 	public List<GameObject> pipes;
 
 	// Use this for initialization
@@ -21,8 +21,13 @@ public class ExecutePotionScript : PotionScript
 			}                
 		}
 
-		foreach (GameObject gameObject in actualOutputs){
-			gameObject.SetActive (false);
+		foreach (ListWrapper listWrapper in actualOutputs) {
+			List<GameObject> outputRow = listWrapper.list;
+			foreach (GameObject gameObject in outputRow) {
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (false);
+				}
+			}                
 		}
 
 		// does what PotionScript does
