@@ -80,10 +80,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 		GameObject pathObject = pathObjects [potionStepCount];
 		ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
-		// hide original inputs and outputs
-		potion.HideAndShowInputsOutputs(false);
-
-		// display actual inputs and outputs
 		int matchingIndex = -1;
 		if (potionStepCount == 0) {
 			// output of first potion depends on the pathIndex
@@ -103,7 +99,11 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 
-		DisplayAndSetInputOutput (potion, matchingIndex);
+		// hide original inputs and outputs 	//potion.HideAndShowInputsOutputs(false);
+		HideOriginalInputOutput(potion, matchingIndex);
+
+		// display actual inputs and outputs
+		DisplayActualInputOutput (potion, matchingIndex);
 
 		// increase step count and check if further steps are allowed
 		potionStepCount ++;
@@ -112,27 +112,39 @@ public class ExecutePathSelectScript : MonoBehaviour
 		}
 	}
 
-	private void DisplayAndSetInputOutput(ExecutePotionScript potion, int index){
+	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
 		previousOutputs.Clear ();
-
-		Debug.Log ("index : " + index);
-		Debug.Log ("length : " + potion.actualInputs.Count);
-
 
 		List<GameObject> actualInputs = potion.actualInputs [index].list;
 		foreach (GameObject actualInput in actualInputs) {
 			actualInput.SetActive (true);
-			actualInput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
+			//actualInput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
 		}
 
 		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
 		foreach (GameObject actualOutput in actualOutputs) {
 			actualOutput.SetActive (true);
-			actualOutput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
+			//actualOutput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
 
 			// add sprite to previousOutput
 			Sprite sprite = actualOutput.GetComponent<SpriteRenderer>().sprite;
 			previousOutputs.Add (sprite);
+		}
+	}
+
+	private void HideOriginalInputOutput(ExecutePotionScript potion, int index){
+
+		List<GameObject> originalInputs = potion.inputs [index].list;
+		foreach (GameObject originalInput in originalInputs) {
+			originalInput.SetActive (false);
+		}
+
+		Debug.Log ("index : " + index);
+
+		List<GameObject> originalOutputs = potion.outputs [index].list;
+		foreach (GameObject originalOutput in originalOutputs) {
+			Debug.Log ("originalOutput " + originalOutput.name);
+			originalOutput.SetActive (false);
 		}
 	}
 

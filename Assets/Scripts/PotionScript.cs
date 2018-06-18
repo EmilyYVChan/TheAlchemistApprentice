@@ -68,12 +68,12 @@ public class PotionScript : MonoBehaviour {
 				}
 			}                
 		}
-
-		foreach (GameObject gameObject in slashes) {
-			if (!gameObject.tag.Equals ("IO")) {
-				gameObject.SetActive (isVisible);
-			}
-		}
+//
+//		foreach (GameObject gameObject in slashes) {
+//			if (!gameObject.tag.Equals ("IO")) {
+//				gameObject.SetActive (isVisible);
+//			}
+//		}
 	}
 
     public virtual void OnMouseDown()
