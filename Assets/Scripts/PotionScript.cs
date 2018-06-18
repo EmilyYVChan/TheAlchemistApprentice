@@ -28,34 +28,14 @@ public class PotionScript : MonoBehaviour {
 	public virtual void Start () {
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
-		Debug.Log ("ispected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
+		Debug.Log ("inspected " + LevelData.isPotionInspected (this.gameObject.name)+ " "+this.gameObject.name);
+
 		if (!LevelData.isPotionInspected (this.gameObject.name)) {
-			foreach (ListWrapper listWrapper in inputs) {
-				List<GameObject> inputRow = listWrapper.list;
-				foreach (GameObject gameObject in inputRow) {
-					if (!gameObject.tag.Equals ("IO")) {
-						gameObject.SetActive (false);
-					}
-				}                
-			}
-
-			foreach (GameObject gameObject in outputs) {
-				if (!gameObject.tag.Equals ("IO")) {
-					gameObject.SetActive (false);
-				}
-			}
-
-			foreach (GameObject gameObject in slashes) {
-				if (!gameObject.tag.Equals ("IO")) {
-					gameObject.SetActive (false);
-				}
-			}
-
-			foreach (GameObject formula in formulae) {
-				formula.SetActive (false);
-			}
+			HideAndShowInputsOutputs (false);
+		} else {
+			HideAndShowInputsOutputs (true);
 		}
-    }
+	}
 	
 	// Update is called once per frame
 	public void Update () {
@@ -132,5 +112,32 @@ public class PotionScript : MonoBehaviour {
 		diagnoseBtn.interactable = false;
 		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
 		nextBtn.interactable = false;
+	}
+
+	private void HideAndShowInputsOutputs(bool isVisible){
+		foreach (ListWrapper listWrapper in inputs) {
+			List<GameObject> inputRow = listWrapper.list;
+			foreach (GameObject gameObject in inputRow) {
+				if (!gameObject.tag.Equals ("IO")) {
+					gameObject.SetActive (isVisible);
+				}
+			}                
+		}
+
+		foreach (GameObject gameObject in outputs) {
+			if (!gameObject.tag.Equals ("IO")) {
+				gameObject.SetActive (isVisible);
+			}
+		}
+
+		foreach (GameObject gameObject in slashes) {
+			if (!gameObject.tag.Equals ("IO")) {
+				gameObject.SetActive (isVisible);
+			}
+		}
+
+		foreach (GameObject formula in formulae) {
+			formula.SetActive (isVisible);
+		}
 	}
 }
