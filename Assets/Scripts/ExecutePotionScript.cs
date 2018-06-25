@@ -7,7 +7,9 @@ public class ExecutePotionScript : PotionScript
 	public List<ListWrapper> actualInputs;
 	public List<ListWrapper> actualOutputs;
 	public List<GameObject> pipes;
+
 	private int costOfExecutionPerComponent = 1;
+	private bool hasBreakpoint = false;
 
 	// Use this for initialization
 	public override void Start ()
@@ -32,27 +34,22 @@ public class ExecutePotionScript : PotionScript
 		}
 
 		// does what PotionScript does
-		// !! If actual input = original input; parent Start() will reset the input to visibile
-		// therefore base.Start() must be called after hiding actual inputs and outputs
 		base.Start ();
 	}
 
 	public override void OnMouseDown()
 	{
 		// incur costs, should show the expected inputs/outputs of these components
-		if (!LevelData.isPotionInspected(this.gameObject.name))
+		if (!LevelData.isPotionExecuted(this.gameObject.name))
 		{
+			hasBreakpoint = true;
 			LevelData.addCost(costOfExecutionPerComponent);
-			LevelData.addInspectedPotion (this.gameObject.name);
-			//Debug.Log("entered !isAlreadyInspected ");
-			//string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
-			//int oldCost = System.Int32.Parse(currentCostString);
-			//Debug.Log("oldCost = " + oldCost);
-			//int newCost = oldCost + (costOfInspectionPerFormula * inputs.Count);
-			//Debug.Log("newCost = " + newCost);
-			//string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
-			//costTextUI.text = newCostString;
+			LevelData.addExecutedPotion (this.gameObject.name);
 		}
+	}
+
+	public void ClearBreakpoint(){
+		hasBreakpoint = false;
 	}
 }
 

@@ -9,7 +9,8 @@ using UnityEngine;
 		private static int currentCost;
 		private static int currentIteration = 1;
 		private static List<string> inspectedPotions = new List<string>();
-		private static List<string> executedPotions = new List<string>();
+	private static int currentActivePath = -1;
+	private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
 
 		public static int getCurrentCost()
 		{
@@ -39,12 +40,16 @@ using UnityEngine;
 		return (inspectedPotions.Contains (potionName));
 		}
 
-		public static void addExecutedPotion(string potionName){
-			executedPotions.Add (potionName);
+	public static void addExecutedPotion(string potionName){
+		executedPotionPathIndexPairs.Add (new PotionPathIndexPair(potionName,currentActivePath));
 		}
 
-		public static bool isExecutedInspected(string potionName){
-			return (executedPotions.Contains (potionName));
+	public static bool isPotionExecuted(string potionName){
+		return (executedPotionPathIndexPairs.Contains (new PotionPathIndexPair(potionName,currentActivePath)));
 		}
+
+	public static void setCurrentActivePath(int pathIndex){
+		currentActivePath = pathIndex;
+	}
 }
 
