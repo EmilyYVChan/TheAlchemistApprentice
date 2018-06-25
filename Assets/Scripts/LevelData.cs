@@ -9,6 +9,7 @@ using UnityEngine;
 		private static int currentCost;
 		private static int currentIteration = 1;
 		private static List<string> inspectedPotions = new List<string>();
+		private static List<string> executedPotions = new List<string>();
 
 		public static int getCurrentCost()
 		{
@@ -34,8 +35,16 @@ using UnityEngine;
 		inspectedPotions.Add (potionName);
 		}
 		
-	public static bool isPotionInspected(string potionName){
+		public static bool isPotionInspected(string potionName){
 		return (inspectedPotions.Contains (potionName));
 		}
-	}
+
+		public static void addExecutedPotion(string potionName){
+			executedPotions.Add (potionName);
+		}
+
+		public static bool isExecutedInspected(string potionName){
+			return (executedPotions.Contains (potionName));
+		}
+}
 

@@ -7,6 +7,7 @@ public class ExecutePotionScript : PotionScript
 	public List<ListWrapper> actualInputs;
 	public List<ListWrapper> actualOutputs;
 	public List<GameObject> pipes;
+	private int costOfExecutionPerComponent = 1;
 
 	// Use this for initialization
 	public override void Start ()
@@ -38,6 +39,20 @@ public class ExecutePotionScript : PotionScript
 
 	public override void OnMouseDown()
 	{
+		// incur costs, should show the expected inputs/outputs of these components
+		if (!LevelData.isPotionInspected(this.gameObject.name))
+		{
+			LevelData.addCost(costOfExecutionPerComponent);
+			LevelData.addInspectedPotion (this.gameObject.name);
+			//Debug.Log("entered !isAlreadyInspected ");
+			//string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
+			//int oldCost = System.Int32.Parse(currentCostString);
+			//Debug.Log("oldCost = " + oldCost);
+			//int newCost = oldCost + (costOfInspectionPerFormula * inputs.Count);
+			//Debug.Log("newCost = " + newCost);
+			//string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
+			//costTextUI.text = newCostString;
+		}
 	}
 }
 
