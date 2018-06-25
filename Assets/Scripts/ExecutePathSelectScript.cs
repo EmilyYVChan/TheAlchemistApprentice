@@ -39,6 +39,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	public void OnMouseDown()
 	{
+		// update current active path
+		LevelData.setCurrentActivePath(pathIndex);
+
 		// change input opacity
 		foreach (GameObject otherInput in otherInputs) {
 			otherInput.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, .4f);
@@ -56,6 +59,8 @@ public class ExecutePathSelectScript : MonoBehaviour
 		// highlight control flow path
 		ChangePipeColour(pathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
 
+		//=======================================================================================
+
 		// set RunStepBtn with THIS gameObject
 		runOneStepBtn.onClick.RemoveAllListeners();
 		runOneStepBtn.onClick.AddListener (RunOneStep);
@@ -63,6 +68,13 @@ public class ExecutePathSelectScript : MonoBehaviour
 		// clear step count whenever a new path is selected
 		potionStepCount = 0;
 		runOneStepBtn.interactable = true;
+
+		// clear breakpoints on all potions
+		GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
+		foreach (GameObject gameObject in potions) {
+			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
+			ep.ClearBreakpoint ();
+		}
 	}
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){

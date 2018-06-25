@@ -8,6 +8,9 @@ public class ExecutePotionScript : PotionScript
 	public List<ListWrapper> actualOutputs;
 	public List<GameObject> pipes;
 
+	private int costOfExecutionPerComponent = 1;
+	private bool hasBreakpoint = false;
+
 	// Use this for initialization
 	public override void Start ()
 	{
@@ -31,13 +34,22 @@ public class ExecutePotionScript : PotionScript
 		}
 
 		// does what PotionScript does
-		// !! If actual input = original input; parent Start() will reset the input to visibile
-		// therefore base.Start() must be called after hiding actual inputs and outputs
 		base.Start ();
 	}
 
 	public override void OnMouseDown()
 	{
+		// incur costs, should show the expected inputs/outputs of these components
+		if (!LevelData.isPotionExecuted(this.gameObject.name))
+		{
+			hasBreakpoint = true;
+			LevelData.addCost(costOfExecutionPerComponent);
+			LevelData.addExecutedPotion (this.gameObject.name);
+		}
+	}
+
+	public void ClearBreakpoint(){
+		hasBreakpoint = false;
 	}
 }
 
