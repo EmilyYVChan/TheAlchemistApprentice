@@ -71,8 +71,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 		// clear step count whenever a new path is selected
 		potionStepCount = 0;
-		runOneStepBtn.interactable = true;
-
 		ToggleBreakpointAndColliderOnPotions ();
 	}
 
@@ -88,9 +86,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	public void RunOneStep(){
-		if (potionStepCount == pathObjects.Count) {
-			runOneStepBtn.interactable = false;
-		}
 		GameObject pathObject = pathObjects [potionStepCount];
 		ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
@@ -115,7 +110,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 		// increase step count and check if further steps are allowed
 		potionStepCount ++;
-
 		PopulatePreviousOutputs (potion, matchingIndex);
 
 		if (potion.PotionHasBreakpoint ()) {
@@ -126,6 +120,12 @@ public class ExecutePathSelectScript : MonoBehaviour
 			// display actual inputs and outputs
 			DisplayActualInputOutput (potion, matchingIndex);
 			potion.ClearBreakpoint ();
+
+			if (!StillHasBreakpoints ()) {
+				// all potions do not have anymore breakpoints
+				runOneStepBtn.interactable = false;
+				potionStepCount = 0;
+			}
 			return;
 		} else {
 			Debug.Log(potion.gameObject.name + " has no break point");
@@ -203,6 +203,17 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 		return true;
+	}
+
+	private bool StillHasBreakpoints(){
+		foreach (GameObject gameObject in pathObjects) {
+			
+			ExecutePotionScript eps = gameObject.GetComponent<ExecutePotionScript> ();
+			if (eps.PotionHasBreakpoint ()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
