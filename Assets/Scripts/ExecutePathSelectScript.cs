@@ -28,7 +28,11 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 			// set RunStepBtn with THIS gameObject
 			runOneStepBtn.onClick.AddListener (RunOneStep);
+
+			// disable the collider box for potions that are not objects on THIS path
+			ToggleBreakpointAndColliderOnPotions ();
 		}
+		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
 	}
 	
 	// Update is called once per frame
@@ -67,14 +71,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 		// clear step count whenever a new path is selected
 		potionStepCount = 0;
-		runOneStepBtn.interactable = true;
-
-		// clear breakpoints on all potions
-		GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
-		foreach (GameObject gameObject in potions) {
-			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
-			ep.ClearBreakpoint ();
-		}
+		ToggleBreakpointAndColliderOnPotions ();
 	}
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
@@ -111,23 +108,52 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 
-		// hide original inputs and outputs 	//potion.HideAndShowInputsOutputs(false);
-		HideOriginalInputOutput(potion, matchingIndex);
-
-		// display actual inputs and outputs
-		DisplayActualInputOutput (potion, matchingIndex);
-
 		// increase step count and check if further steps are allowed
 		potionStepCount ++;
-		if (potionStepCount == pathObjects.Count) {
-			runOneStepBtn.interactable = false;
-		}
+		PopulatePreviousOutputs (potion, matchingIndex);
 
-        LevelData.addCost(1);
+		if (potion.PotionHasBreakpoint ()) {
+			Debug.Log(potion.gameObject.name + " has break point");
+			// hide original inputs and outputs 	//potion.HideAndShowInputsOutputs(false);
+			HideOriginalInputOutput (potion, matchingIndex);
+
+			// display actual inputs and outputs
+			DisplayActualInputOutput (potion, matchingIndex);
+			potion.ClearBreakpoint ();
+
+			if (!StillHasBreakpoints ()) {
+				// all potions do not have anymore breakpoints
+				runOneStepBtn.interactable = false;
+				potionStepCount = 0;
+			}
+			return;
+		} else {
+			Debug.Log(potion.gameObject.name + " has no break point");
+			RunOneStep ();
+		}
     }
 
+	private void ToggleBreakpointAndColliderOnPotions(){
+
+		// clear breakpoints on all potions
+		GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
+		foreach (GameObject gameObject in potions) {
+			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
+			ep.ClearBreakpoint ();
+		}
+
+		// disable box collider on potions not involved in this path
+		// enable box collider on potions involved in this path (in case it has been disabled previously)
+		foreach (GameObject potion in potions){
+			if (!pathObjects.Contains (potion)) {
+				potion.GetComponent<BoxCollider2D> ().enabled = false;
+			} else {
+				potion.GetComponent<BoxCollider2D> ().enabled = true;
+			}
+		}
+	}
+
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
-		previousOutputs.Clear ();
 
 		List<GameObject> actualInputs = potion.actualInputs [index].list;
 		foreach (GameObject actualInput in actualInputs) {
@@ -139,7 +165,13 @@ public class ExecutePathSelectScript : MonoBehaviour
 		foreach (GameObject actualOutput in actualOutputs) {
 			actualOutput.SetActive (true);
 			//actualOutput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
+		}
+	}
 
+	private void PopulatePreviousOutputs(ExecutePotionScript potion, int index){
+		previousOutputs.Clear ();
+		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
+		foreach (GameObject actualOutput in actualOutputs) {
 			// add sprite to previousOutput
 			Sprite sprite = actualOutput.GetComponent<SpriteRenderer>().sprite;
 			previousOutputs.Add (sprite);
@@ -171,6 +203,17 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 		return true;
+	}
+
+	private bool StillHasBreakpoints(){
+		foreach (GameObject gameObject in pathObjects) {
+			
+			ExecutePotionScript eps = gameObject.GetComponent<ExecutePotionScript> ();
+			if (eps.PotionHasBreakpoint ()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
