@@ -29,6 +29,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			// set RunStepBtn with THIS gameObject
 			runOneStepBtn.onClick.AddListener (RunOneStep);
 		}
+		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
 	}
 	
 	// Update is called once per frame
@@ -89,6 +90,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	public void RunOneStep(){
+		if (potionStepCount == pathObjects.Count) {
+			runOneStepBtn.interactable = false;
+		}
 		GameObject pathObject = pathObjects [potionStepCount];
 		ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
@@ -111,23 +115,27 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 
-		// hide original inputs and outputs 	//potion.HideAndShowInputsOutputs(false);
-		HideOriginalInputOutput(potion, matchingIndex);
-
-		// display actual inputs and outputs
-		DisplayActualInputOutput (potion, matchingIndex);
-
 		// increase step count and check if further steps are allowed
 		potionStepCount ++;
-		if (potionStepCount == pathObjects.Count) {
-			runOneStepBtn.interactable = false;
-		}
 
-        LevelData.addCost(1);
+		PopulatePreviousOutputs (potion, matchingIndex);
+
+		if (potion.PotionHasBreakpoint ()) {
+			Debug.Log(potion.gameObject.name + " has break point");
+			// hide original inputs and outputs 	//potion.HideAndShowInputsOutputs(false);
+			HideOriginalInputOutput (potion, matchingIndex);
+
+			// display actual inputs and outputs
+			DisplayActualInputOutput (potion, matchingIndex);
+			potion.ClearBreakpoint ();
+			return;
+		} else {
+			Debug.Log(potion.gameObject.name + " has no break point");
+			RunOneStep ();
+		}
     }
 
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
-		previousOutputs.Clear ();
 
 		List<GameObject> actualInputs = potion.actualInputs [index].list;
 		foreach (GameObject actualInput in actualInputs) {
@@ -139,7 +147,13 @@ public class ExecutePathSelectScript : MonoBehaviour
 		foreach (GameObject actualOutput in actualOutputs) {
 			actualOutput.SetActive (true);
 			//actualOutput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
+		}
+	}
 
+	private void PopulatePreviousOutputs(ExecutePotionScript potion, int index){
+		previousOutputs.Clear ();
+		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
+		foreach (GameObject actualOutput in actualOutputs) {
 			// add sprite to previousOutput
 			Sprite sprite = actualOutput.GetComponent<SpriteRenderer>().sprite;
 			previousOutputs.Add (sprite);

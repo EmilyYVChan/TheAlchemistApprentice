@@ -51,5 +51,9 @@ public class ExecutePotionScript : PotionScript
 	public void ClearBreakpoint(){
 		hasBreakpoint = false;
 	}
+
+	public bool PotionHasBreakpoint(){
+		return hasBreakpoint;
+	}
 }
 
