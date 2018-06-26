@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ExecutePotionScript : PotionScript
 {
@@ -45,6 +46,8 @@ public class ExecutePotionScript : PotionScript
 			hasBreakpoint = true;
 			LevelData.addCost(costOfExecutionPerComponent);
 			LevelData.addExecutedPotion (this.gameObject.name);
+			Button runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
+			runOneStepBtn.interactable = true;
 		}
 	}
 

@@ -28,6 +28,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 			// set RunStepBtn with THIS gameObject
 			runOneStepBtn.onClick.AddListener (RunOneStep);
+
+			// disable the collider box for potions that are not objects on THIS path
+			ToggleBreakpointAndColliderOnPotions ();
 		}
 		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
 	}
@@ -70,12 +73,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 		potionStepCount = 0;
 		runOneStepBtn.interactable = true;
 
-		// clear breakpoints on all potions
-		GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
-		foreach (GameObject gameObject in potions) {
-			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
-			ep.ClearBreakpoint ();
-		}
+		ToggleBreakpointAndColliderOnPotions ();
 	}
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
@@ -134,6 +132,26 @@ public class ExecutePathSelectScript : MonoBehaviour
 			RunOneStep ();
 		}
     }
+
+	private void ToggleBreakpointAndColliderOnPotions(){
+
+		// clear breakpoints on all potions
+		GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
+		foreach (GameObject gameObject in potions) {
+			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
+			ep.ClearBreakpoint ();
+		}
+
+		// disable box collider on potions not involved in this path
+		// enable box collider on potions involved in this path (in case it has been disabled previously)
+		foreach (GameObject potion in potions){
+			if (!pathObjects.Contains (potion)) {
+				potion.GetComponent<BoxCollider2D> ().enabled = false;
+			} else {
+				potion.GetComponent<BoxCollider2D> ().enabled = true;
+			}
+		}
+	}
 
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
 
