@@ -8,35 +8,40 @@ public class ExecutePotionScript : PotionScript
 	public List<ListWrapper> actualInputs;
 	public List<ListWrapper> actualOutputs;
 	public List<GameObject> pipes;
+	public GameObject breakpointText;
 
-	private int costOfExecutionPerComponent = 1;
 	private bool hasBreakpoint = false;
 
 	// Use this for initialization
 	public override void Start ()
 	{
-		// THIS SHOULD BE CALLED FIRST
-		// does what PotionScript does
 		base.Start ();
 
-		// hides actual inputs and outputs
-		if(!LevelData.isPotionExecuted (this.gameObject.name)){
-			foreach (ListWrapper listWrapper in actualInputs) {
-				List<GameObject> inputRow = listWrapper.list;
-				foreach (GameObject gameObject in inputRow) {
-					if (!gameObject.tag.Equals ("IO")) {
-						gameObject.SetActive (false);
-					}
-				}                
-			}
+		List<PotionPathIndexPair> executedPotionPathIndexPairs = LevelData.getExecutedPotionPathIndexPairs ();
+	
+		foreach (PotionPathIndexPair executedPotionPathIndexPair in executedPotionPathIndexPairs){
+			if(executedPotionPathIndexPair.getPotionName().Equals(this.gameObject.name)){
+				int index = executedPotionPathIndexPair.getIOIndex ();
+				List<GameObject> actualInput = actualInputs [index].list;
 
-			foreach (ListWrapper listWrapper in actualOutputs) {
-				List<GameObject> outputRow = listWrapper.list;
-				foreach (GameObject gameObject in outputRow) {
-					if (!gameObject.tag.Equals ("IO")) {
-						gameObject.SetActive (false);
-					}
-				}                
+				foreach (GameObject gb in actualInput) {
+					gb.SetActive (true);
+				}
+
+				List<GameObject> actualOutput= actualOutputs [index].list;
+				foreach (GameObject gb in actualOutput) {
+					gb.SetActive (true);
+				}
+
+				List<GameObject> input = inputs [index].list;
+				foreach (GameObject gb in input) {
+					gb.SetActive (false);
+				}
+
+				List<GameObject> output = outputs [index].list;
+				foreach (GameObject gb in output) {
+					gb.SetActive (false);
+				}
 			}
 		}
 	}
@@ -44,11 +49,11 @@ public class ExecutePotionScript : PotionScript
 	public override void OnMouseDown()
 	{
 		// incur costs, should show the expected inputs/outputs of these components
-		if (!LevelData.isPotionExecuted(this.gameObject.name))
+		if (!LevelData.isPotionExecuted(new PotionPathIndexPair(this.gameObject.name, LevelData.getCurrentActivePath())))
 		{
+			Debug.Log ("not executed!!");
 			hasBreakpoint = true;
-			LevelData.addCost(costOfExecutionPerComponent);
-			LevelData.addExecutedPotion (this.gameObject.name);
+			breakpointText.SetActive (true); // shows the "breakpoint" label underneath potion
 			Button runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
 			runOneStepBtn.interactable = true;
 		}
@@ -60,6 +65,10 @@ public class ExecutePotionScript : PotionScript
 
 	public bool PotionHasBreakpoint(){
 		return hasBreakpoint;
+	}
+
+	public void HideBreakpointText(){
+		breakpointText.SetActive (false);
 	}
 }
 

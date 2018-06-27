@@ -31,6 +31,8 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 			// disable the collider box for potions that are not objects on THIS path
 			ToggleBreakpointAndColliderOnPotions ();
+
+			LevelData.setCurrentActivePath (pathIndex);
 		}
 		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
 	}
@@ -65,13 +67,15 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 		//=======================================================================================
 
-		// set RunStepBtn with THIS gameObject
-		runOneStepBtn.onClick.RemoveAllListeners();
-		runOneStepBtn.onClick.AddListener (RunOneStep);
-
 		// clear step count whenever a new path is selected
 		potionStepCount = 0;
 		ToggleBreakpointAndColliderOnPotions ();
+
+		// set RunStepBtn with THIS gameObject
+		runOneStepBtn.onClick.RemoveAllListeners();
+		runOneStepBtn.onClick.AddListener (RunOneStep);
+		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
+
 	}
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
@@ -113,13 +117,16 @@ public class ExecutePathSelectScript : MonoBehaviour
 		PopulatePreviousOutputs (potion, matchingIndex);
 
 		if (potion.PotionHasBreakpoint ()) {
-			Debug.Log(potion.gameObject.name + " has break point");
-			// hide original inputs and outputs 	//potion.HideAndShowInputsOutputs(false);
+			// hide original inputs and outputs 	
 			HideOriginalInputOutput (potion, matchingIndex);
 
 			// display actual inputs and outputs
 			DisplayActualInputOutput (potion, matchingIndex);
 			potion.ClearBreakpoint ();
+
+			// add cost for displaying actual inputs and outputs
+			LevelData.addCost(1);
+			LevelData.addExecutedPotion (new PotionPathIndexPair(potion.gameObject.name, pathIndex, matchingIndex));
 
 			if (!StillHasBreakpoints ()) {
 				// all potions do not have anymore breakpoints
@@ -128,7 +135,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 			return;
 		} else {
-			Debug.Log(potion.gameObject.name + " has no break point");
 			RunOneStep ();
 		}
     }
@@ -140,6 +146,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 		foreach (GameObject gameObject in potions) {
 			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
 			ep.ClearBreakpoint ();
+			ep.HideBreakpointText();
 		}
 
 		// disable box collider on potions not involved in this path
