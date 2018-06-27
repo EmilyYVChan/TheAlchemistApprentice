@@ -8,6 +8,7 @@ public class ExecutePotionScript : PotionScript
 	public List<ListWrapper> actualInputs;
 	public List<ListWrapper> actualOutputs;
 	public List<GameObject> pipes;
+	public GameObject breakpointText;
 
 	private int costOfExecutionPerComponent = 1;
 	private bool hasBreakpoint = false;
@@ -47,6 +48,7 @@ public class ExecutePotionScript : PotionScript
 		if (!LevelData.isPotionExecuted(this.gameObject.name))
 		{
 			hasBreakpoint = true;
+			breakpointText.SetActive (true); // shows the "breakpoint" label underneath potion
 			LevelData.addCost(costOfExecutionPerComponent);
 			LevelData.addExecutedPotion (this.gameObject.name);
 			Button runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
