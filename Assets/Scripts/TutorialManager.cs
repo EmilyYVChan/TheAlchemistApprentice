@@ -22,6 +22,7 @@ public class TutorialManager : MonoBehaviour {
     private static bool shouldShowExecute = false;
 
     private static bool hasAlreadyInspectedOneComponent = false;
+    private static bool hasBeenToExecuteStage = false;
 
     private static bool isSecondIteration = false;
 
@@ -72,6 +73,7 @@ public class TutorialManager : MonoBehaviour {
     {
         isSecondIteration = true;
         shouldShowIteration = true;
+        hasBeenToExecuteStage = true;
     }
 
 
@@ -133,7 +135,7 @@ public class TutorialManager : MonoBehaviour {
             shouldShowDiagnose = false;
         }
 
-        if (shouldShowExecute && Dialogue.activeSelf == false)
+        if (shouldShowExecute && Dialogue.activeSelf == false && !hasBeenToExecuteStage)
         {
             Tut_Execute.SetActive(true);
             shouldShowExecute = false;
