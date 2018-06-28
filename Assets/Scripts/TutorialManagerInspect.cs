@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialManager : MonoBehaviour {
+public class TutorialManagerInspect : MonoBehaviour {
 
     public GameObject Tut_InspectComponent;
     public GameObject Tut_ComponentBhvrDialogue;
@@ -45,7 +45,6 @@ public class TutorialManager : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
             if (hit.collider != null)
             {
                 if (hit.collider.gameObject.name == "RedPotion")
