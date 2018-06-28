@@ -19,7 +19,7 @@ public class SceneLoader : MonoBehaviour
 
         if (LevelData.getCurrentIteration() == 2)
         {
-            TutorialManager.setIsSecondIteration();
+            TutorialManagerInspect.setIsSecondIteration();
         }
     }
 
