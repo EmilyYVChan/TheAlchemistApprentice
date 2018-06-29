@@ -23,6 +23,7 @@ public class TutorialManagerInspect : MonoBehaviour {
 
     private static bool hasAlreadyInspectedOneComponent = false;
     private static bool hasBeenToExecuteStage = false;
+    private static bool hasShownExecute = false;
 
     private static bool isSecondIteration = false;
 
@@ -55,7 +56,8 @@ public class TutorialManagerInspect : MonoBehaviour {
 
                     hasAlreadyInspectedOneComponent = true;
 
-                } else if (hasAlreadyInspectedOneComponent && 
+                } else if (!hasShownExecute && 
+                    hasAlreadyInspectedOneComponent && 
                     (hit.collider.gameObject.name == "YellowPotion" || hit.collider.gameObject.name == "PinkPotion" || hit.collider.gameObject.name == "BluePotion"))
                 {
                     shouldShowExecute = true;
@@ -138,6 +140,7 @@ public class TutorialManagerInspect : MonoBehaviour {
         {
             Tut_Execute.SetActive(true);
             shouldShowExecute = false;
+            hasShownExecute = true;
         }
     }
 }
