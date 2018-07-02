@@ -94,6 +94,11 @@ public class PotionScript : MonoBehaviour {
             //costTextUI.text = newCostString;
         }
 
+        if (!JournalData.isPotionInspected(this.gameObject.name))
+        {
+            JournalData.addInspectedPotion(this.gameObject.name);
+        }
+
 		// display formula in dialogue
 		UpdateDialogue ();
 
