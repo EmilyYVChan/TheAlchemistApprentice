@@ -5,22 +5,33 @@ using UnityEngine.UI;
 
 public class JournalController : MonoBehaviour {
 
-    GameObject canvasJournalObject;
+    public GameObject canvasJournalObject;
+    public GameObject componentViewJournal;
+    public GameObject systemViewJournal;
+    public GameObject noComponentsRecordedText;
 
-	// Use this for initialization
-	void Start () {
-        canvasJournalObject = GameObject.Find("CanvasJournal");
+    // Use this for initialization
+    void Start () {
         canvasJournalObject.SetActive(false);
-	}
+        componentViewJournal.SetActive(false);
+        systemViewJournal.SetActive(false);
+        noComponentsRecordedText.SetActive(false);
+    }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void openJournal()
     {
         canvasJournalObject.SetActive(true);
+        if (JournalData.checkIfHasNotInspectedAnyComponents() == true)
+        {
+            noComponentsRecordedText.SetActive(true);
+            componentViewJournal.SetActive(false);
+        } else
+        {
+            noComponentsRecordedText.SetActive(false);
+            componentViewJournal.SetActive(true);
+        }
+        
+        systemViewJournal.SetActive(false);
     }
 
     public void closeJournal()
@@ -30,14 +41,14 @@ public class JournalController : MonoBehaviour {
 
     public void openComponentsTab()
     {
-        //close system tab
-        //open components tab
+        componentViewJournal.SetActive(true);
+        systemViewJournal.SetActive(false);
     }
 
     public void openSystemsTab()
     {
-        //close components tab
-        //open systems tab
+        componentViewJournal.SetActive(false);
+        systemViewJournal.SetActive(true);
     }
 
     public void showSystemView(int level)
@@ -62,14 +73,5 @@ public class JournalController : MonoBehaviour {
         {
             systemViewsGameObject.transform.GetChild(2).gameObject.SetActive(true);
         }
-    }
-
-
-
-
-    //------------------Helper methods
-    private void disableAllSystemViews()
-    {
-
     }
 }

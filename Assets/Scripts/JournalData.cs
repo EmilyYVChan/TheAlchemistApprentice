@@ -6,13 +6,14 @@ public static class JournalData
 {
     private static List<string> inspectedPotionsByName = new List<string>();
     private static bool[] inspectedPotionsByNumber = new bool[4];
+    public static bool hasNotInspectedAnyPotions = true;
 
     public static void addInspectedPotion(string potionName)
     {
         inspectedPotionsByName.Add(potionName);
         int potionNumber = PotionNameToNumberMapper.getPotionNumber(potionName);
-        //Debug.Log("potionNumber = " + potionNumber);
         inspectedPotionsByNumber[potionNumber - 1] = true;
+        hasNotInspectedAnyPotions = false;
     }
 
     public static bool isPotionInspected(string potionName)
@@ -23,5 +24,10 @@ public static class JournalData
     public static bool[] getListOfInspectedPotionsThusFar()
     {
         return inspectedPotionsByNumber;
+    }
+
+    public static bool checkIfHasNotInspectedAnyComponents()
+    {
+        return hasNotInspectedAnyPotions;
     }
 }

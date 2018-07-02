@@ -6,16 +6,13 @@ public class ComponentsListControl : MonoBehaviour {
     
     [SerializeField]
     private List<GameObject> componentTemplates;
-    private List<GameObject> componentJournalItems;
 
-    void Start()
-    {
-        componentJournalItems = new List<GameObject>();
-    }
+    private List<GameObject> componentJournalItems = new List<GameObject>();
 
     // Use this for initialization
     public void generateList()
     {
+        Debug.Log("componentJournalitems = " + componentJournalItems.Count);
         if (componentJournalItems.Count > 0)
         {
             foreach (GameObject item in componentJournalItems)

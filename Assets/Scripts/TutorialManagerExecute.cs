@@ -25,7 +25,7 @@ public class TutorialManagerExecute : MonoBehaviour {
     private static bool shouldShowReplacedExpected = false;
     private static bool shouldShowNoBreakpoint = false;
 
-    private static bool skipShowRun1Step2 = false;
+    //private static bool skipShowRun1Step2 = false;
 
     // Use this for initialization
     void Start()
