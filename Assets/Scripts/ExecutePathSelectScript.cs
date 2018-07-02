@@ -6,25 +6,34 @@ using UnityEngine.UI;
 public class ExecutePathSelectScript : MonoBehaviour
 {
 	public List<GameObject> otherInputs;
-	public bool isDefault;
-	public List<GameObject> pathObjects;
-	public int pathIndex;
+	public List<GameObject> otherNeighbourInputs;
+	public bool isActive;
+	public List<PotionScript.ListWrapper> pathObjects;
+	public List<int> pathIndex;
 
 	private int potionStepCount = 0;
 	private List<Sprite> previousOutputs = new List<Sprite>();
 	private Button runOneStepBtn;
+	private List<GameObject> currentPathObjects;
+	private int currentPathIndex;
 
 	// Use this for initialization
 	void Start ()
 	{
+		// decide on current path index
+		currentPathIndex =  GetCurrentPathIndex();
+		int index = pathIndex.IndexOf (currentPathIndex);
+		currentPathObjects = pathObjects [index].list;
+		//===================================================
+
 		runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
-		if (!isDefault) {
+		if (!isActive) {
 			// render input semi-transparent if this input is not default
 			this.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, .4f);
 		} 
 		else {
 			// highlight the associated control flow path if this input is default
-			ChangePipeColour(pathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
+			ChangePipeColour(currentPathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
 
 			// set RunStepBtn with THIS gameObject
 			runOneStepBtn.onClick.AddListener (RunOneStep);
@@ -32,7 +41,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			// disable the collider box for potions that are not objects on THIS path
 			ToggleBreakpointAndColliderOnPotions ();
 
-			LevelData.setCurrentActivePath (pathIndex);
+			LevelData.setCurrentActivePath (currentPathIndex);
 		}
 		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
 	}
@@ -45,25 +54,36 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	public void OnMouseDown()
 	{
+		// set this input to be active, and other neighbour inputs as inactive
+		isActive = true;
+		ToggleActiveFlagOnOtherInputs ();
+
+		currentPathIndex =  GetCurrentPathIndex();
+		int index = pathIndex.IndexOf (currentPathIndex);
+		currentPathObjects = pathObjects [index].list;
+		//===================================================
+
 		// update current active path
-		LevelData.setCurrentActivePath(pathIndex);
+		LevelData.setCurrentActivePath(currentPathIndex);
 
 		// change input opacity
-		foreach (GameObject otherInput in otherInputs) {
+		foreach (GameObject otherInput in otherNeighbourInputs) {
 			otherInput.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, .4f);
 		}
 
 		this.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, 1f);
 
 		// un-highlight other control flow path
-		foreach (GameObject otherInput in otherInputs){
+		foreach (GameObject otherInput in otherNeighbourInputs){
 			ExecutePathSelectScript epss = otherInput.GetComponent<ExecutePathSelectScript> ();
-			List<GameObject> otherPathObjects = epss.pathObjects;
-			ChangePipeColour(otherPathObjects,new Color (1f, 1f, 1f, 1f)); // white
+			List<PotionScript.ListWrapper> otherPathObjects = epss.pathObjects;
+			foreach (PotionScript.ListWrapper otherPathObject in otherPathObjects) {
+				ChangePipeColour(otherPathObject.list,new Color (1f, 1f, 1f, 1f)); // white
+			}
 		}
 
 		// highlight control flow path
-		ChangePipeColour(pathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
+		ChangePipeColour(currentPathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
 
 		//=======================================================================================
 
@@ -80,6 +100,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
 		foreach (GameObject pathObject in pathObjects){
+			Debug.Log ("no pipues?: " + pathObject.gameObject.name);
 			ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
 			List<GameObject> pipes = potion.pipes;
@@ -90,13 +111,13 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	public void RunOneStep(){
-		GameObject pathObject = pathObjects [potionStepCount];
+		GameObject pathObject = currentPathObjects [potionStepCount];
 		ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
 		int matchingIndex = -1;
 		if (potionStepCount == 0) {
 			// output of first potion depends on the pathIndex
-			matchingIndex = pathIndex;
+			matchingIndex = currentPathIndex;
 		
 		} else {
 			// non-first potions only receive one input when executed which can be determined by matching previous output
@@ -126,7 +147,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 			// add cost for displaying actual inputs and outputs
 			LevelData.addCost(1);
-			LevelData.addExecutedPotion (new PotionPathIndexPair(potion.gameObject.name, pathIndex, matchingIndex));
+			LevelData.addExecutedPotion (new PotionPathIndexPair(potion.gameObject.name, currentPathIndex, matchingIndex));
 
 			if (!StillHasBreakpoints ()) {
 				// all potions do not have anymore breakpoints
@@ -152,12 +173,19 @@ public class ExecutePathSelectScript : MonoBehaviour
 		// disable box collider on potions not involved in this path
 		// enable box collider on potions involved in this path (in case it has been disabled previously)
 		foreach (GameObject potion in potions){
-			if (!pathObjects.Contains (potion)) {
+			if (!currentPathObjects.Contains (potion)) {
 				potion.GetComponent<BoxCollider2D> ().enabled = false;
 			} else {
 				potion.GetComponent<BoxCollider2D> ().enabled = true;
 			}
 		}
+	}
+
+	private void ToggleActiveFlagOnOtherInputs(){
+		foreach (GameObject otherInput in otherNeighbourInputs) {
+			ExecutePathSelectScript epss = otherInput.GetComponent<ExecutePathSelectScript> ();
+			epss.isActive = false;
+		}	
 	}
 
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
@@ -213,7 +241,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	private bool StillHasBreakpoints(){
-		foreach (GameObject gameObject in pathObjects) {
+		foreach (GameObject gameObject in currentPathObjects) {
 			
 			ExecutePotionScript eps = gameObject.GetComponent<ExecutePotionScript> ();
 			if (eps.PotionHasBreakpoint ()) {
@@ -221,6 +249,28 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 		return false;
+	}
+
+	private int GetCurrentPathIndex(){
+		List<int> tempPathIndex = pathIndex;
+		foreach (GameObject otherInput in otherInputs) {
+			ExecutePathSelectScript epss = otherInput.GetComponent<ExecutePathSelectScript> ();
+			if (epss.isActive) {
+				return FindIntersection (epss.pathIndex, pathIndex);
+			}
+		}
+		// if no other input is active - there should be one element in pathIndex
+		return tempPathIndex[0];
+	}
+
+	private int FindIntersection(List<int> listOne, List<int> listTwo){
+		// !!!!!! This method assumes there is at most one mutual element in two lists
+		foreach (int i in listOne) {
+			if (listTwo.Contains (i)) {
+				return i;
+			}
+		}
+		return -1; // It would be a mistake if two lists do not have a mutual element - exception
 	}
 }
 
