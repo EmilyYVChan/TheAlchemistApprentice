@@ -9,6 +9,8 @@ public class ComponentsListControl : MonoBehaviour {
 
     [SerializeField]
     private GameObject p1Template;
+    [SerializeField]
+    private GameObject p2Template;
 
     [SerializeField]
     private GameObject buttonTemplate;
@@ -37,26 +39,29 @@ public class ComponentsListControl : MonoBehaviour {
             componentJournalItems.Clear();
         }
 
-        for (int i = 0; i < count; i++)
+        /*for (int i = 0; i < count; i++)
         {
             GameObject journalItem = Instantiate(p1Template) as GameObject;
             journalItem.SetActive(true);
 
             journalItem.transform.SetParent(p1Template.transform.parent, false);
         }
-        count++;
+        count++;*/
 
-        /*bool[] recordedPotions = JournalData.getListOfInspectedPotionsThusFar();
+        bool[] recordedPotions = JournalData.getListOfInspectedPotionsThusFar();
         for (int i = 0; i < recordedPotions.Length; i++)
         {
+            Debug.Log("recordedPotion[" + i + "] = " + recordedPotions[i]);
             if (recordedPotions[i] == true)
             {
                 GameObject journalItem = Instantiate(componentTemplates[i]) as GameObject;
                 journalItem.SetActive(true);
 
                 journalItem.transform.SetParent(componentTemplates[i].transform.parent, false);
+
+                componentJournalItems.Add(journalItem);
             }
-        }*/
+        }
 
     }
 
