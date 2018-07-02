@@ -6,20 +6,6 @@ public class ComponentsListControl : MonoBehaviour {
     
     [SerializeField]
     private List<GameObject> componentTemplates;
-
-    [SerializeField]
-    private GameObject p1Template;
-    [SerializeField]
-    private GameObject p2Template;
-
-    [SerializeField]
-    private GameObject buttonTemplate;
-
-    //[SerializeField]
-    //private int[] intArray;
-    private int count = 1;
-
-    private List<GameObject> buttons;
     private List<GameObject> componentJournalItems;
 
     void Start()
@@ -63,10 +49,5 @@ public class ComponentsListControl : MonoBehaviour {
             }
         }
 
-    }
-
-    public void ButtonClicked(string myTextString)
-    {
-        Debug.Log(myTextString);
     }
 }
