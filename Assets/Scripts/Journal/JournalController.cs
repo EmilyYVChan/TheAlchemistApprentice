@@ -21,16 +21,7 @@ public class JournalController : MonoBehaviour {
     public void openJournal()
     {
         canvasJournalObject.SetActive(true);
-        if (JournalData.checkIfHasNotInspectedAnyComponents() == true)
-        {
-            noComponentsRecordedText.SetActive(true);
-            componentViewJournal.SetActive(false);
-        } else
-        {
-            noComponentsRecordedText.SetActive(false);
-            componentViewJournal.SetActive(true);
-        }
-        
+        activateComponentView();  
         systemViewJournal.SetActive(false);
     }
 
@@ -41,13 +32,13 @@ public class JournalController : MonoBehaviour {
 
     public void openComponentsTab()
     {
-        componentViewJournal.SetActive(true);
+        activateComponentView();
         systemViewJournal.SetActive(false);
     }
 
     public void openSystemsTab()
     {
-        componentViewJournal.SetActive(false);
+        deactivateComponentView();
         systemViewJournal.SetActive(true);
     }
 
@@ -73,5 +64,25 @@ public class JournalController : MonoBehaviour {
         {
             systemViewsGameObject.transform.GetChild(2).gameObject.SetActive(true);
         }
+    }
+
+    private void activateComponentView()
+    {
+        if (JournalData.checkIfHasNotInspectedAnyComponents() == true)
+        {
+            noComponentsRecordedText.SetActive(true);
+            componentViewJournal.SetActive(false);
+        }
+        else
+        {
+            noComponentsRecordedText.SetActive(false);
+            componentViewJournal.SetActive(true);
+        }
+    }
+
+    private void deactivateComponentView()
+    {
+        componentViewJournal.SetActive(false);
+        noComponentsRecordedText.SetActive(false);
     }
 }
