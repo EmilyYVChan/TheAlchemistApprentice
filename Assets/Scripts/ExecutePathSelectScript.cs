@@ -12,7 +12,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 	public List<int> pathIndex;
 
 	private int potionStepCount = 0;
-	private List<Sprite> previousOutputs = new List<Sprite>();
+	private List<List<Sprite>> previousOutputs = new List<List<Sprite>>();
 	private Button runOneStepBtn;
 	private List<GameObject> currentPathObjects;
 	private int currentPathIndex;
@@ -55,6 +55,8 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	public void OnMouseDown()
 	{
+		previousOutputs.Clear ();
+
 		// set this input to be active, and other neighbour inputs as inactive
 		isActive = true;
 		ToggleActiveFlagOnOtherInputs ();
@@ -121,6 +123,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 		
 		} else {
 			// non-first potions only receive one input when executed which can be determined by matching previous output
+			Debug.Log("potion name: " + potion.gameObject.name);
 			List<PotionScript.ListWrapper> actualInputs = potion.actualInputs;
 
 			for (int i =0; i < actualInputs.Count; i++){
@@ -138,6 +141,8 @@ public class ExecutePathSelectScript : MonoBehaviour
 		potionStepCount ++;
 		PopulatePreviousOutputs (potion, matchingIndex);
 
+		Debug.Log (" potion: " + potion.gameObject.name + " has breakpioint ? : " + potion.PotionHasBreakpoint ());
+		Debug.Log ("matching index : " + matchingIndex);
 		if (potion.PotionHasBreakpoint ()) {
 			// hide original inputs and outputs 	
 			HideOriginalInputOutput (potion, matchingIndex);
@@ -190,6 +195,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
+		Debug.Log ("potion to display: " + potion.gameObject.name);
 		List<GameObject> actualInputs = potion.actualInputs [index].list;
 		foreach (GameObject actualInput in actualInputs) {
 			actualInput.SetActive (true);
@@ -204,14 +210,17 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	private void PopulatePreviousOutputs(ExecutePotionScript potion, int index){
-		previousOutputs.Clear ();
+		//previousOutputs.Clear ();
 		Debug.Log ("index is : " + index);
 		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
+		List<Sprite> outputSprites = new List<Sprite> ();
+
 		foreach (GameObject actualOutput in actualOutputs) {
 			// add sprite to previousOutput
 			Sprite sprite = actualOutput.GetComponent<SpriteRenderer>().sprite;
-			previousOutputs.Add (sprite);
+			outputSprites.Add (sprite);
 		}
+		previousOutputs.Add (outputSprites);
 	}
 
 	private void HideOriginalInputOutput(ExecutePotionScript potion, int index){
@@ -229,18 +238,23 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	private bool MatchInputOutput(List<GameObject> inputs){
 		// debug
-		foreach (Sprite gb in previousOutputs){
-			Debug.Log (" previous outputs: " + gb.name);
+		foreach (List<Sprite> gb in previousOutputs){
+			foreach (Sprite sprite in gb) {
+				Debug.Log (" previous outputs: " + sprite.name);
+			}
 		}
 		//
 		foreach (GameObject input in inputs) {
 			Sprite sprite = input.GetComponent<SpriteRenderer>().sprite;
 			Debug.Log ("given input name : " + sprite.name);
-			if (!previousOutputs.Contains(sprite)){
-				return false;
+
+			foreach (List<Sprite> potionOutputs in previousOutputs){
+				if (potionOutputs.Contains(sprite)){
+					return true;
+				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	private bool StillHasBreakpoints(){
