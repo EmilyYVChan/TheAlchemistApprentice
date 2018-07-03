@@ -8,11 +8,10 @@ public class ComponentsListControl : MonoBehaviour {
     private List<GameObject> componentTemplates;
 
     private List<GameObject> componentJournalItems = new List<GameObject>();
-
-    // Use this for initialization
+    
     public void generateList()
     {
-        Debug.Log("componentJournalitems = " + componentJournalItems.Count);
+        //Debug.Log("componentJournalitems = " + componentJournalItems.Count);
         if (componentJournalItems.Count > 0)
         {
             foreach (GameObject item in componentJournalItems)
@@ -34,7 +33,7 @@ public class ComponentsListControl : MonoBehaviour {
         bool[] recordedPotions = JournalData.getListOfInspectedPotionsThusFar();
         for (int i = 0; i < recordedPotions.Length; i++)
         {
-            Debug.Log("recordedPotion[" + i + "] = " + recordedPotions[i]);
+            //Debug.Log("recordedPotion[" + i + "] = " + recordedPotions[i]);
             if (recordedPotions[i] == true)
             {
                 GameObject journalItem = Instantiate(componentTemplates[i]) as GameObject;
