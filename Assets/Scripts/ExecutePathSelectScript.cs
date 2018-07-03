@@ -36,6 +36,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			ChangePipeColour(currentPathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
 
 			// set RunStepBtn with THIS gameObject
+			runOneStepBtn.onClick.RemoveAllListeners();
 			runOneStepBtn.onClick.AddListener (RunOneStep);
 
 			// disable the collider box for potions that are not objects on THIS path
@@ -125,6 +126,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			for (int i =0; i < actualInputs.Count; i++){
 				
 				List<GameObject> actualInput = actualInputs[i].list;
+
 				if (MatchInputOutput (actualInput)) {
 					matchingIndex = i; 
 					break;
@@ -188,7 +190,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
-
 		List<GameObject> actualInputs = potion.actualInputs [index].list;
 		foreach (GameObject actualInput in actualInputs) {
 			actualInput.SetActive (true);
@@ -204,6 +205,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	private void PopulatePreviousOutputs(ExecutePotionScript potion, int index){
 		previousOutputs.Clear ();
+		Debug.Log ("index is : " + index);
 		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
 		foreach (GameObject actualOutput in actualOutputs) {
 			// add sprite to previousOutput
@@ -219,19 +221,21 @@ public class ExecutePathSelectScript : MonoBehaviour
 			originalInput.SetActive (false);
 		}
 
-		Debug.Log ("index : " + index);
-
 		List<GameObject> originalOutputs = potion.outputs [index].list;
 		foreach (GameObject originalOutput in originalOutputs) {
-			Debug.Log ("originalOutput " + originalOutput.name);
 			originalOutput.SetActive (false);
 		}
 	}
 
 	private bool MatchInputOutput(List<GameObject> inputs){
-
+		// debug
+		foreach (Sprite gb in previousOutputs){
+			Debug.Log (" previous outputs: " + gb.name);
+		}
+		//
 		foreach (GameObject input in inputs) {
 			Sprite sprite = input.GetComponent<SpriteRenderer>().sprite;
+			Debug.Log ("given input name : " + sprite.name);
 			if (!previousOutputs.Contains(sprite)){
 				return false;
 			}
