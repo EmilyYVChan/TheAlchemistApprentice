@@ -100,7 +100,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
 		foreach (GameObject pathObject in pathObjects){
-			Debug.Log ("no pipues?: " + pathObject.gameObject.name);
 			ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
 			List<GameObject> pipes = potion.pipes;
