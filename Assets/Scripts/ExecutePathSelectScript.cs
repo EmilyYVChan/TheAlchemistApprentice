@@ -24,6 +24,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 		currentPathIndex =  GetCurrentPathIndex();
 		int index = pathIndex.IndexOf (currentPathIndex);
 		currentPathObjects = pathObjects [index].list;
+
+		// add initial inputs to previousOutputs list to facilitate IO matching
+
 		//===================================================
 
 		runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
@@ -126,15 +129,15 @@ public class ExecutePathSelectScript : MonoBehaviour
 			Debug.Log("potion name: " + potion.gameObject.name);
 			List<PotionScript.ListWrapper> actualInputs = potion.actualInputs;
 
-			for (int i =0; i < actualInputs.Count; i++){
-				
-				List<GameObject> actualInput = actualInputs[i].list;
+		//	for (int i =0; i < actualInputs.Count; i++){
+		//		
+//				List<GameObject> actualInput = actualInputs[i].list;
 
-				if (MatchInputOutput (actualInput)) {
-					matchingIndex = i; 
-					break;
-				}
-			}
+				matchingIndex = MatchInputOutput (actualInputs);
+		//		if (matchingIndex != -1) {
+		//			break;
+			//	}
+		//	}
 		}
 
 		// increase step count and check if further steps are allowed
@@ -212,15 +215,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 	private void PopulatePreviousOutputs(ExecutePotionScript potion, int index){
 		//previousOutputs.Clear ();
 		Debug.Log ("index is : " + index);
-		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
-		List<Sprite> outputSprites = new List<Sprite> ();
+		PotionScript.ListWrapper actualOutputs = potion.actualOutputs [index];
 
-		foreach (GameObject actualOutput in actualOutputs) {
-			// add sprite to previousOutput
-			Sprite sprite = actualOutput.GetComponent<SpriteRenderer>().sprite;
-			outputSprites.Add (sprite);
-		}
-		previousOutputs.Add (outputSprites);
+		previousOutputs.Add (actualOutputs.GetSpriteList());
 	}
 
 	private void HideOriginalInputOutput(ExecutePotionScript potion, int index){
@@ -236,7 +233,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 		}
 	}
 
-	private bool MatchInputOutput(List<GameObject> inputs){
+	private int MatchInputOutput(List<PotionScript.ListWrapper> actualInputs){
+		List<Sprite> matchedList = new List<Sprite> ();
+
 		// debug
 		foreach (List<Sprite> gb in previousOutputs){
 			foreach (Sprite sprite in gb) {
@@ -244,17 +243,42 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 		//
-		foreach (GameObject input in inputs) {
-			Sprite sprite = input.GetComponent<SpriteRenderer>().sprite;
-			Debug.Log ("given input name : " + sprite.name);
+		foreach (PotionScript.ListWrapper actualInput in actualInputs) {
+			foreach (Sprite sprite in actualInput.GetSpriteList()) {
+				Debug.Log ("given input name : " + sprite.name);
 
-			foreach (List<Sprite> potionOutputs in previousOutputs){
-				if (potionOutputs.Contains(sprite)){
-					return true;
+				foreach (List<Sprite> potionOutputs in previousOutputs){
+					if (potionOutputs.Contains(sprite) && !matchedList.Contains(sprite)){
+						matchedList.Add (sprite);
+					}
 				}
 			}
 		}
-		return false;
+		// debug
+		foreach (Sprite s in matchedList){
+			Debug.Log ("sprite name: " + s.name);
+		}
+
+		for (int i = 0; i < actualInputs.Count; i++) {
+			List<Sprite> actualInput = actualInputs [i].GetSpriteList();
+			if (CheckSpriteListEquivalence (actualInput, matchedList)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private bool CheckSpriteListEquivalence(List<Sprite> listOne, List<Sprite> listTwo){
+		if (listOne.Count != listTwo.Count) {
+			return false;
+		}
+
+		foreach (Sprite gb in listOne) {
+			if (!listTwo.Contains(gb)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private bool StillHasBreakpoints(){

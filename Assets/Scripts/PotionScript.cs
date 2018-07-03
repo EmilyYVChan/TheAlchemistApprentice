@@ -10,6 +10,13 @@ public class PotionScript : MonoBehaviour {
     public class ListWrapper
     {
         public List<GameObject> list;
+		public List<Sprite> GetSpriteList(){
+			List<Sprite> spriteList = new List<Sprite> ();
+			foreach (GameObject gb in list) {
+				spriteList.Add (gb.GetComponent<SpriteRenderer> ().sprite);
+			}
+			return spriteList;
+		}
     }
 
     public List<ListWrapper> inputs;
