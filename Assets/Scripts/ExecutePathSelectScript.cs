@@ -25,8 +25,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 		int index = pathIndex.IndexOf (currentPathIndex);
 		currentPathObjects = pathObjects [index].list;
 
-		// add initial inputs to previousOutputs list to facilitate IO matching
-
 		//===================================================
 
 		runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
@@ -35,6 +33,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 			this.gameObject.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, .4f);
 		} 
 		else {
+			// add initial inputs to previousOutputs list to facilitate IO matching
+			AddActiveIOToPreviousOutputs();
+
 			// highlight the associated control flow path if this input is default
 			ChangePipeColour(currentPathObjects,new Color (1f, 1f, 0f, 1f)); // yellow
 
@@ -58,8 +59,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	public void OnMouseDown()
 	{
-		previousOutputs.Clear ();
-
 		// set this input to be active, and other neighbour inputs as inactive
 		isActive = true;
 		ToggleActiveFlagOnOtherInputs ();
@@ -102,6 +101,10 @@ public class ExecutePathSelectScript : MonoBehaviour
 		runOneStepBtn.onClick.AddListener (RunOneStep);
 		runOneStepBtn.interactable = false; // initialise to false because player cannot run until at least a breakpoint is set
 
+		//=======================================================================================
+		previousOutputs.Clear ();	
+		AddActiveIOToPreviousOutputs ();
+
 	}
 
 	private void ChangePipeColour(List<GameObject> pathObjects, Color colour){
@@ -120,25 +123,17 @@ public class ExecutePathSelectScript : MonoBehaviour
 		ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
 		int matchingIndex = -1;
-		if (potionStepCount == 0) {
+		//if (potionStepCount == 0) {
 			// output of first potion depends on the pathIndex
-			matchingIndex = currentPathIndex;
+		//	matchingIndex = currentPathIndex;
 		
-		} else {
+		//} else {
 			// non-first potions only receive one input when executed which can be determined by matching previous output
 			Debug.Log("potion name: " + potion.gameObject.name);
 			List<PotionScript.ListWrapper> actualInputs = potion.actualInputs;
 
-		//	for (int i =0; i < actualInputs.Count; i++){
-		//		
-//				List<GameObject> actualInput = actualInputs[i].list;
-
-				matchingIndex = MatchInputOutput (actualInputs);
-		//		if (matchingIndex != -1) {
-		//			break;
-			//	}
-		//	}
-		}
+			matchingIndex = MatchInputOutput (actualInputs);
+	//	}
 
 		// increase step count and check if further steps are allowed
 		potionStepCount ++;
@@ -269,9 +264,10 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	private bool CheckSpriteListEquivalence(List<Sprite> listOne, List<Sprite> listTwo){
-		if (listOne.Count != listTwo.Count) {
-			return false;
-		}
+		// ! DO NOT delete the following commented code
+		//if (listOne.Count != listTwo.Count) {
+		//	return false;
+		//}
 
 		foreach (Sprite gb in listOne) {
 			if (!listTwo.Contains(gb)) {
@@ -312,6 +308,22 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 		return -1; // It would be a mistake if two lists do not have a mutual element - exception
+	}
+
+	private void AddActiveIOToPreviousOutputs(){
+		GameObject[] initialIO = GameObject.FindGameObjectsWithTag("IO");
+		List<Sprite> sprites = new List<Sprite> ();
+
+		foreach (GameObject gb in initialIO) {
+			ExecutePathSelectScript epss = gb.GetComponent<ExecutePathSelectScript> ();
+
+			if ( epss == null || epss.isActive ) {
+				Sprite sprite = gb.GetComponent<SpriteRenderer> ().sprite;
+				Debug.Log ("add sprite : " + sprite.name + " object name ; " + gb.name);
+				sprites.Add (sprite);
+			}
+		}
+		previousOutputs.Add (sprites);
 	}
 }
 
