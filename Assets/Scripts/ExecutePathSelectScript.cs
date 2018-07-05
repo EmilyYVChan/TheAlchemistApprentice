@@ -319,7 +319,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 			if ( epss == null || epss.isActive ) {
 				Sprite sprite = gb.GetComponent<SpriteRenderer> ().sprite;
-				Debug.Log ("add sprite : " + sprite.name + " object name ; " + gb.name);
+				//Debug.Log ("add sprite : " + sprite.name + " object name ; " + gb.name);
 				sprites.Add (sprite);
 			}
 		}
