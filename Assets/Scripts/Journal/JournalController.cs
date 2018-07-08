@@ -8,10 +8,12 @@ public class JournalController : MonoBehaviour {
     public GameObject canvasJournalObject;
     public GameObject componentViewJournal;
     public GameObject systemViewJournal;
+    public GameObject pathsViewJournal;
     public GameObject noComponentsRecordedText;
     public GameObject graph;
     public GameObject systemViewTab;
     public GameObject componentViewTab;
+    public GameObject pathsViewTab;
 
     // Use this for initialization
     void Start () {
@@ -26,6 +28,7 @@ public class JournalController : MonoBehaviour {
         canvasJournalObject.SetActive(true);
         activateComponentView();
         deactivateSystemView();
+        deactivatePathsView();
         graph.SetActive(false);
     }
 
@@ -39,12 +42,21 @@ public class JournalController : MonoBehaviour {
     {
         activateComponentView();
         deactivateSystemView();
+        deactivatePathsView();
     }
 
     public void openSystemsTab()
     {
         deactivateComponentView();
         activateSystemView();
+        deactivatePathsView();
+    }
+
+    public void openPathsTab()
+    {
+        deactivateComponentView();
+        deactivateSystemView();
+        activatePathsView();
     }
 
     public void showSystemView(int level)
@@ -71,6 +83,33 @@ public class JournalController : MonoBehaviour {
         {
             highlightActiveSystemViewButton("SystemViewJournalLevel2Btn");
             systemViewsGameObject.transform.GetChild(2).gameObject.SetActive(true);
+        }
+    }
+
+    public void showPathView(int level)
+    {
+        //disable all levels' path view
+        GameObject pathViewsGameObject = GameObject.Find("PathViews");
+        foreach (Transform child in pathViewsGameObject.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        //enable the desired system view
+        if (level == 0)
+        {
+            highlightActivePathViewButton("PathsViewJournalLevelTutorialBtn");
+            pathViewsGameObject.transform.GetChild(0).gameObject.SetActive(true);
+        }
+        else if (level == 1)
+        {
+            highlightActivePathViewButton("PathsViewJournalLevel1Btn");
+            pathViewsGameObject.transform.GetChild(1).gameObject.SetActive(true);
+        }
+        else
+        {
+            highlightActivePathViewButton("PathsViewJournalLevel2Btn");
+            pathViewsGameObject.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
 
@@ -112,12 +151,36 @@ public class JournalController : MonoBehaviour {
         systemViewTab.GetComponentInChildren<Text>().color = new Color32(120, 120, 120, 255);
     }
 
-    private void highlightActiveSystemViewButton(string activeButtonName) 
+    private void activatePathsView()
+    {
+        pathsViewJournal.SetActive(true);
+        pathsViewTab.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        pathsViewTab.GetComponentInChildren<Text>().color = new Color32(255, 255, 255, 255);
+    }
+
+    private void deactivatePathsView()
+    {
+        pathsViewJournal.SetActive(false);
+        pathsViewTab.GetComponent<Image>().color = new Color32(120, 120, 120, 255);
+        pathsViewTab.GetComponentInChildren<Text>().color = new Color32(120, 120, 120, 255);
+    }
+
+    private void highlightActiveSystemViewButton(string activeButtonName)
     {
         //dim all buttons before highlighting the desired button
         GameObject.Find("SystemViewJournalLevelTutorialBtn").GetComponent<Image>().color = new Color32(120, 120, 120, 255);
         GameObject.Find("SystemViewJournalLevel1Btn").GetComponent<Image>().color = new Color32(120, 120, 120, 255);
         GameObject.Find("SystemViewJournalLevel2Btn").GetComponent<Image>().color = new Color32(120, 120, 120, 255);
+
+        GameObject.Find(activeButtonName).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+    }
+
+    private void highlightActivePathViewButton(string activeButtonName)
+    {
+        //dim all buttons before highlighting the desired button
+        GameObject.Find("PathsViewJournalLevelTutorialBtn").GetComponent<Image>().color = new Color32(120, 120, 120, 255);
+        GameObject.Find("PathsViewJournalLevel1Btn").GetComponent<Image>().color = new Color32(120, 120, 120, 255);
+        GameObject.Find("PathsViewJournalLevel2Btn").GetComponent<Image>().color = new Color32(120, 120, 120, 255);
 
         GameObject.Find(activeButtonName).GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }

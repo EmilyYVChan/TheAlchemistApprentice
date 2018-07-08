@@ -13,7 +13,7 @@ public class SystemViewControl : MonoBehaviour {
         bool[] inspectedPotions = JournalData.getListOfInspectedPotionsThusFar();
         for (int i = 0; i < inspectedPotions.Length; i++)
         {
-            Debug.Log("inspectedPotion[" + i + "] = " + inspectedPotions[i]);
+            //Debug.Log("inspectedPotion[" + i + "] = " + inspectedPotions[i]);
             if (inspectedPotions[i] == true)
             {
                 systemViewPotionIOObjs[i].SetActive(true);
