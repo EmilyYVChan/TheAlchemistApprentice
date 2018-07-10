@@ -22,7 +22,6 @@ public static class PotionNameToNumberMapper {
             { "NavyBluePotion", 14 },
             { "DarkBluePotion", 15 },
             { "TurquoisePotion", 16 },
-            { "DarkBluePotion", 15 },
             { "OrangePotion1", 17 },
             { "OrangePotion2", 18 },
             { "OrangePotion3", 19 },
