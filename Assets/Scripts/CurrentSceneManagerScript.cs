@@ -13,12 +13,12 @@ public class CurrentSceneManagerScript : MonoBehaviour {
         iterationCountTextUI.text = LevelData.getCurrentIteration().ToString();
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
-		LevelData.setCurrentCost(int.Parse(costTextUI.text));
+		LevelData.setCurrentMana(int.Parse(costTextUI.text));
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        costTextUI.text = LevelData.getCurrentCost().ToString();
+		costTextUI.text = LevelData.getCurrentMana().ToString();
 
 		if (int.Parse(costTextUI.text) == 0) {
 			disableAllPotionCollider ();

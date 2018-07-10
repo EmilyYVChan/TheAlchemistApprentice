@@ -11,7 +11,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 	public List<PotionScript.ListWrapper> pathObjects;
 	public List<int> pathIndex;
 
-	private int potionStepCount = 0;
+	private static int potionStepCount = 0;
 	private List<List<Sprite>> previousOutputs = new List<List<Sprite>>();
 	private Button runOneStepBtn;
 	private List<GameObject> currentPathObjects;
@@ -225,13 +225,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 	private int MatchInputOutput(List<PotionScript.ListWrapper> actualInputs){
 		List<Sprite> matchedList = new List<Sprite> ();
 
-		// debug
-		foreach (List<Sprite> gb in previousOutputs){
-			foreach (Sprite sprite in gb) {
-				Debug.Log (" previous outputs: " + sprite.name);
-			}
-		}
-		//
 		foreach (PotionScript.ListWrapper actualInput in actualInputs) {
 			foreach (Sprite sprite in actualInput.GetSpriteList()) {
 				Debug.Log ("given input name : " + sprite.name);
@@ -272,14 +265,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 	}
 
 	private bool StillHasBreakpoints(){
-		foreach (GameObject gameObject in currentPathObjects) {
-			
-			ExecutePotionScript eps = gameObject.GetComponent<ExecutePotionScript> ();
-			if (eps.PotionHasBreakpoint ()) {
-				return true;
-			}
-		}
-		return false;
+		return (ExecutePotionScript.GetAllBreakpoints () > 0);
 	}
 
 	private int GetCurrentPathIndex(){
@@ -318,6 +304,10 @@ public class ExecutePathSelectScript : MonoBehaviour
 			}
 		}
 		previousOutputs.Add (sprites);
+	}
+
+	public static void ClearPotionStepCount(){
+		potionStepCount = 0;
 	}
 }
 

@@ -48,15 +48,25 @@ public class ExecutePotionScript : PotionScript
 
 	public override void OnMouseDown()
 	{
-		int tempCurrentCost = LevelData.getCurrentCost () - GetAllBreakpoints () - 1; // minus one extra because player is trying to set brkpt on THIS object too
-	//	Debug.Log ("temp currentcost : " + tempCurrentCost);
-		if ((!LevelData.isPotionExecuted(new PotionPathIndexPair(this.gameObject.name, LevelData.getCurrentActivePath()))) && (tempCurrentCost >= 0))
+		int tempCurrentMana;
+		if (hasBreakpoint) {
+			// plus one because player is trying to clear brkpt on THIS object
+			tempCurrentMana = LevelData.getCurrentMana() - GetAllBreakpoints () + 1; 
+		} else {
+			// minus one extra because player is trying to set brkpt on THIS object 
+			tempCurrentMana = LevelData.getCurrentMana () - GetAllBreakpoints () - 1; 
+		}
+	
+		if ((!LevelData.isPotionExecuted(new PotionPathIndexPair(this.gameObject.name, LevelData.getCurrentActivePath()))) && (tempCurrentMana >= 0))
 		{
 			Debug.Log ("not executed!!");
-			hasBreakpoint = true;
-			breakpointText.SetActive (true); // shows the "breakpoint" label underneath potion
+			hasBreakpoint = !hasBreakpoint;
+			breakpointText.SetActive (hasBreakpoint);
 			Button runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
-			runOneStepBtn.interactable = true;
+			runOneStepBtn.interactable = (GetAllBreakpoints () != 0);
+			if (!runOneStepBtn.interactable) {
+				ExecutePathSelectScript.ClearPotionStepCount ();
+			}
 		}
 	}
 
@@ -72,7 +82,7 @@ public class ExecutePotionScript : PotionScript
 		breakpointText.SetActive (false);
 	}
 
-	private int GetAllBreakpoints(){
+	public static int GetAllBreakpoints(){
 		GameObject[] potions = GameObject.FindGameObjectsWithTag ("Potion");
 		int count = 0;
 		foreach (GameObject gameObject in potions) {

@@ -85,7 +85,7 @@ public class PotionScript : MonoBehaviour {
 
     public virtual void OnMouseDown()
 	{
-		int currentCost = LevelData.getCurrentCost ();
+		int currentCost = LevelData.getCurrentMana ();
 		if ((currentCost - (costOfInspectionPerFormula * inputs.Count) >= 0) || LevelData.isPotionInspected(this.gameObject.name)) {
 
 			HideAndShowInputsOutputs (true);
