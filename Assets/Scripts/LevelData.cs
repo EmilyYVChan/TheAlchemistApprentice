@@ -5,12 +5,17 @@ using UnityEngine;
 
 	public static class LevelData
 	{
-
+		private static int totalCost;
 		private static int currentCost;
 		private static int currentIteration = 1;
 		private static List<string> inspectedPotions = new List<string>();
-	private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
-	private static int currentActivePath;
+		private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
+		private static int currentActivePath;
+
+		public static void setCurrentCost(int cost)
+		{
+			currentCost = cost;
+		}
 
 		public static int getCurrentCost()
 		{
@@ -25,6 +30,7 @@ using UnityEngine;
 		public static void addCost(int increment)
 		{
 			currentCost += increment;
+			totalCost += (increment * -1);
 		}
 
 		public static void incrementIteration()

@@ -84,33 +84,28 @@ public class PotionScript : MonoBehaviour {
 	}
 
     public virtual void OnMouseDown()
-    {
-		HideAndShowInputsOutputs (true);
+	{
+		int currentCost = LevelData.getCurrentCost ();
+		if ((currentCost - (costOfInspectionPerFormula * inputs.Count) >= 0) || LevelData.isPotionInspected(this.gameObject.name)) {
 
-		if (!LevelData.isPotionInspected(this.gameObject.name))
-        {
-            LevelData.addCost(costOfInspectionPerFormula * inputs.Count);
-			LevelData.addInspectedPotion (this.gameObject.name);
-            //Debug.Log("entered !isAlreadyInspected ");
-            //string currentCostString = Regex.Match(costTextUI.text, @"\d+").Value;
-            //int oldCost = System.Int32.Parse(currentCostString);
-            //Debug.Log("oldCost = " + oldCost);
-            //int newCost = oldCost + (costOfInspectionPerFormula * inputs.Count);
-            //Debug.Log("newCost = " + newCost);
-            //string newCostString = Regex.Replace(costTextUI.text, @"\d", newCost.ToString());
-            //costTextUI.text = newCostString;
-        }
+			HideAndShowInputsOutputs (true);
+			if (!LevelData.isPotionInspected(this.gameObject.name))
+			{
+				LevelData.addCost(costOfInspectionPerFormula * inputs.Count * -1);
+				LevelData.addInspectedPotion (this.gameObject.name);
+			}
 
-        if (!JournalData.isPotionInspected(this.gameObject.name))
-        {
-            JournalData.addInspectedPotion(this.gameObject.name);
-        }
+			if (!JournalData.isPotionInspected(this.gameObject.name))
+			{
+				JournalData.addInspectedPotion(this.gameObject.name);
+			}
 
-		// display formula in dialogue
-		UpdateDialogue ();
+			// display formula in dialogue
+			UpdateDialogue ();
 
-		// disable buttons behind the dialogue
-		DisableButtons();
+			// disable buttons behind the dialogue
+			DisableButtons();
+		}
     }
 		
 	private void UpdateDialogue()
@@ -142,5 +137,4 @@ public class PotionScript : MonoBehaviour {
 		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
 		nextBtn.interactable = false;
 	}
-
 }

@@ -48,8 +48,9 @@ public class ExecutePotionScript : PotionScript
 
 	public override void OnMouseDown()
 	{
-		// incur costs, should show the expected inputs/outputs of these components
-		if (!LevelData.isPotionExecuted(new PotionPathIndexPair(this.gameObject.name, LevelData.getCurrentActivePath())))
+		int tempCurrentCost = LevelData.getCurrentCost () - GetAllBreakpoints () - 1; // minus one extra because player is trying to set brkpt on THIS object too
+	//	Debug.Log ("temp currentcost : " + tempCurrentCost);
+		if ((!LevelData.isPotionExecuted(new PotionPathIndexPair(this.gameObject.name, LevelData.getCurrentActivePath()))) && (tempCurrentCost >= 0))
 		{
 			Debug.Log ("not executed!!");
 			hasBreakpoint = true;
@@ -69,6 +70,18 @@ public class ExecutePotionScript : PotionScript
 
 	public void HideBreakpointText(){
 		breakpointText.SetActive (false);
+	}
+
+	private int GetAllBreakpoints(){
+		GameObject[] potions = GameObject.FindGameObjectsWithTag ("Potion");
+		int count = 0;
+		foreach (GameObject gameObject in potions) {
+			ExecutePotionScript eps = gameObject.GetComponent<ExecutePotionScript> ();
+			if (eps.hasBreakpoint) {
+				count++;
+			}
+		}
+		return count;
 	}
 }
 

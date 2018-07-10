@@ -123,17 +123,11 @@ public class ExecutePathSelectScript : MonoBehaviour
 		ExecutePotionScript potion = pathObject.GetComponent<ExecutePotionScript> ();
 
 		int matchingIndex = -1;
-		//if (potionStepCount == 0) {
-			// output of first potion depends on the pathIndex
-		//	matchingIndex = currentPathIndex;
-		
-		//} else {
+	
 			// non-first potions only receive one input when executed which can be determined by matching previous output
-			Debug.Log("potion name: " + potion.gameObject.name);
 			List<PotionScript.ListWrapper> actualInputs = potion.actualInputs;
 
 			matchingIndex = MatchInputOutput (actualInputs);
-	//	}
 
 		// increase step count and check if further steps are allowed
 		potionStepCount ++;
@@ -150,7 +144,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			potion.ClearBreakpoint ();
 
 			// add cost for displaying actual inputs and outputs
-			LevelData.addCost(1);
+			LevelData.addCost(-1);
 			LevelData.addExecutedPotion (new PotionPathIndexPair(potion.gameObject.name, currentPathIndex, matchingIndex));
 
 			if (!StillHasBreakpoints ()) {
