@@ -65,5 +65,9 @@ using UnityEngine;
 	public static List<PotionPathIndexPair> getExecutedPotionPathIndexPairs(){
 		return executedPotionPathIndexPairs;
 	}
+
+	public static int GetTotalCost(){
+		return totalCost;
+	}
 }
 
