@@ -5,16 +5,21 @@ using UnityEngine;
 
 	public static class LevelData
 	{
-
-		private static int currentCost;
+		private static int totalCost;
+		private static int currentMana;
 		private static int currentIteration = 1;
 		private static List<string> inspectedPotions = new List<string>();
-	private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
-	private static int currentActivePath;
+		private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
+		private static int currentActivePath;
 
-		public static int getCurrentCost()
+		public static void setCurrentMana(int mana)
 		{
-			return currentCost;
+			currentMana = mana;
+		}
+
+		public static int getCurrentMana()
+		{
+			return currentMana;
 		}
 
 		public static int getCurrentIteration()
@@ -24,7 +29,8 @@ using UnityEngine;
 
 		public static void addCost(int increment)
 		{
-			currentCost += increment;
+			currentMana += increment;
+			totalCost += (increment * -1);
 		}
 
 		public static void incrementIteration()
@@ -58,6 +64,10 @@ using UnityEngine;
 
 	public static List<PotionPathIndexPair> getExecutedPotionPathIndexPairs(){
 		return executedPotionPathIndexPairs;
+	}
+
+	public static int GetTotalCost(){
+		return totalCost;
 	}
 }
 
