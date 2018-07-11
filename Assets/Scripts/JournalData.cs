@@ -5,7 +5,7 @@ using UnityEngine;
 public static class JournalData
 {
     private static List<string> inspectedPotionsByName = new List<string>();
-    private static bool[] inspectedPotionsByNumber = new bool[4];
+    private static bool[] inspectedPotionsByNumber = new bool[20];
     public static bool hasNotInspectedAnyPotions = true;
 
     public static void addInspectedPotion(string potionName)
