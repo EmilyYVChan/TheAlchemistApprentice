@@ -51,7 +51,7 @@ public class TutorialManagerExecute : MonoBehaviour {
             if (hit.collider != null)
             {
                 string hitColliderGameObjectName = hit.collider.gameObject.name;
-                Debug.Log(hitColliderGameObjectName);
+//                Debug.Log(hitColliderGameObjectName);
                 if (hitColliderGameObjectName == "air"
                     && Tut_ChooseInput.activeSelf == true)
                 {
