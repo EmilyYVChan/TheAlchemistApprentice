@@ -11,6 +11,7 @@ public class TutorialManagerExecute : MonoBehaviour {
     public GameObject Tut_SetBreakpoint2;
     public GameObject Tut_Run1Step;
     public GameObject Tut_ViewActual;
+	public GameObject Tut_Cost;
     public GameObject Tut_Run1Step2;
     public GameObject Tut_ReplacedExpected;
     public GameObject Tut_NoBreakpoint;
@@ -21,6 +22,7 @@ public class TutorialManagerExecute : MonoBehaviour {
     private static bool shouldShowSetBreakpoint2 = false;
     private static bool shouldShowRun1Step = false;
     private static bool shouldShowViewActual = false;
+	private static bool shouldShowCost = false;
     private static bool shouldShowRun1Step2 = false;
     private static bool shouldShowReplacedExpected = false;
     private static bool shouldShowNoBreakpoint = false;
@@ -75,7 +77,8 @@ public class TutorialManagerExecute : MonoBehaviour {
                 {
                     disableAllTutorialComponents();
                     shouldShowRun1Step = false;
-                    shouldShowViewActual = true;
+					//shouldShowCost = true;
+					shouldShowViewActual = true;
                 } else if (hitColliderGameObjectName == "RunStepBtn"
                     && Tut_Run1Step2.activeSelf == true)
                 {
@@ -116,6 +119,7 @@ public class TutorialManagerExecute : MonoBehaviour {
         Tut_Run1Step2.SetActive(false);
         Tut_ReplacedExpected.SetActive(false);
         Tut_NoBreakpoint.SetActive(false);
+		Tut_Cost.SetActive (false);
     }
 
     private void updateComponentActiveness()
@@ -140,6 +144,18 @@ public class TutorialManagerExecute : MonoBehaviour {
             Tut_Run1Step.SetActive(true);
         }
 
+		/*if (shouldShowCost && Tut_Run1Step.activeSelf == false) {
+			Tut_Cost.SetActive (true);
+			shouldShowCost = false;
+			shouldShowViewActual = true;
+		}
+
+		if (shouldShowViewActual && Tut_Cost.activeSelf == false) {
+			Tut_ViewActual.SetActive(true);
+			shouldShowViewActual = false;
+			shouldShowRun1Step2 = true;
+		}*/
+
         if (shouldShowViewActual && Tut_Run1Step.activeSelf == false)
         {
             Tut_ViewActual.SetActive(true);
@@ -163,6 +179,12 @@ public class TutorialManagerExecute : MonoBehaviour {
         {
             Tut_NoBreakpoint.SetActive(true);
             shouldShowNoBreakpoint = false;
+			shouldShowCost = true;
         }
+
+		if (shouldShowCost && Tut_NoBreakpoint.activeSelf == false) {
+			Tut_Cost.SetActive (true);
+			shouldShowCost = false;
+		}
     }
 }
