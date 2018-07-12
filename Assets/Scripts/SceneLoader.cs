@@ -14,6 +14,7 @@ public class SceneLoader : MonoBehaviour
 
     public void loadTutorialInspectScene()
     {
+		Debug.Log ("load tutorial inspect?");
         SceneManager.LoadScene(inspectSceneName);
         LevelData.incrementIteration();
 
