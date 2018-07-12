@@ -87,7 +87,7 @@ public class ExecutePotionScript : PotionScript
 		int count = 0;
 		foreach (GameObject gameObject in potions) {
 			ExecutePotionScript eps = gameObject.GetComponent<ExecutePotionScript> ();
-			if (eps.hasBreakpoint) {
+			if (eps.PotionHasBreakpoint()) {
 				count++;
 			}
 		}
