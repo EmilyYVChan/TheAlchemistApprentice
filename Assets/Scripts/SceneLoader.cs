@@ -5,30 +5,30 @@ using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
-    private string executeSceneName = "TutorialExecuteScene";
-    private string inspectSceneName = "TutorialScene";
+	private string executeSceneName = "TutorialExecuteScene";
+	private string inspectSceneName = "TutorialScene";
 
-    public void loadScene(int sceneNumber)
-    {
-        SceneManager.LoadScene(sceneNumber);
-    }
+	public void loadScene(int sceneNumber)
+	{
+		SceneManager.LoadScene(sceneNumber);
+	}
 
-    public void loadTutorialInspectScene()
-    {
+	public void loadTutorialInspectScene()
+	{
 		Debug.Log ("load tutorial inspect?");
-        SceneManager.LoadScene(inspectSceneName);
-        LevelData.incrementIteration();
+		SceneManager.LoadScene(inspectSceneName);
+		LevelData.incrementIteration();
 
-        if (LevelData.getCurrentIteration() == 2)
-        {
-            TutorialManagerInspect.setIsSecondIteration();
-        }
-    }
+		if (LevelData.getCurrentIteration() == 2)
+		{
+			TutorialManagerInspect.setIsSecondIteration();
+		}
+	}
 
-    public void loadTutorialExecuteScene()
-    {
-        SceneManager.LoadScene(executeSceneName);
-    }
+	public void loadTutorialExecuteScene()
+	{
+		SceneManager.LoadScene(executeSceneName);
+	}
 
 	public void clearLevelDataUponLoadingNextLevel(){
 		LevelData.ClearLevelData ();
