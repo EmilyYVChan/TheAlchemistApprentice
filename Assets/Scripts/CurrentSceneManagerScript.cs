@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,17 @@ public class CurrentSceneManagerScript : MonoBehaviour {
         iterationCountTextUI.text = LevelData.getCurrentIteration().ToString();
 
         costTextUI = GameObject.Find("Cost").GetComponent<Text>();
-		LevelData.setCurrentMana(int.Parse(costTextUI.text));
+		int previousMana = LevelData.GetManaBeforeDiagnose ();
+		Debug.Log("mana before diag: " +  previousMana);
+		if ((previousMana == -1) || currentlyInDiagnose()) {
+			Debug.Log ("set properly");
+			LevelData.setCurrentMana (int.Parse (costTextUI.text));
+		} else {
+			Debug.Log ("reset");
+			costTextUI.text = previousMana.ToString ();
+			LevelData.setCurrentMana (previousMana);
+			LevelData.SetSceneManaBeforeDiagnose (-1, -1);
+		}
 	}
 	
 	// Update is called once per frame
@@ -30,5 +41,10 @@ public class CurrentSceneManagerScript : MonoBehaviour {
 		foreach (GameObject gameObject in potions) {
 			gameObject.GetComponent<BoxCollider2D> ().enabled = false;
 		}
+	}
+
+	bool currentlyInDiagnose(){
+		// diagnose scenes have index 7.8.9
+		return (SceneManager.GetActiveScene ().buildIndex > 6);
 	}
 }
