@@ -12,6 +12,9 @@ using UnityEngine;
 		private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
 		private static int currentActivePath;
 
+	private static int sceneBeforeDiagnose = -1;
+	private static int manaBeforeDiagnose = -1;
+
 		public static void setCurrentMana(int mana)
 		{
 			currentMana = mana;
@@ -72,6 +75,30 @@ using UnityEngine;
 
 	public static int GetTotalCost(){
 		return totalCost;
+	}
+
+	public static void ClearLevelData(){
+		totalCost = 0;
+		currentMana = 0;
+		currentIteration = 1;
+		inspectedPotions = new List<string>();
+		executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
+		currentActivePath = 0;
+		sceneBeforeDiagnose = -1;
+		manaBeforeDiagnose = -1;
+	}
+
+	public static void SetSceneManaBeforeDiagnose(int sceneNumber, int mana){
+		sceneBeforeDiagnose = sceneNumber;
+		manaBeforeDiagnose = mana;
+	}
+
+	public static int GetSceneBeforeDiagnose(){
+		return sceneBeforeDiagnose;
+	}
+
+	public static int GetManaBeforeDiagnose(){
+		return manaBeforeDiagnose;
 	}
 }
 
