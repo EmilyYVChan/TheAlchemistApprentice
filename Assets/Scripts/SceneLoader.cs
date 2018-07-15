@@ -43,4 +43,13 @@ public class SceneLoader : MonoBehaviour
 	public void loadManaAndSceneBeforeDiagnose(){
 		SceneManager.LoadScene (LevelData.GetSceneBeforeDiagnose());
 	}
+
+	public void incrementIteration() {
+		LevelData.incrementIteration ();
+
+		if (LevelData.getCurrentIteration() == 2)
+		{
+			TutorialManagerInspect.setIsSecondIteration();
+		}
+	}
 }
