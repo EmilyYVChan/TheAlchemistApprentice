@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -28,4 +29,18 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene(executeSceneName);
     }
+
+	public void clearLevelDataUponLoadingNextLevel(){
+		LevelData.ClearLevelData ();
+	}
+
+	public void storeManaAndSceneBeforeDiagnose(int sceneToLoad){
+		SceneManager.LoadScene (sceneToLoad);
+		Text costTextUI = GameObject.Find("Cost").GetComponent<Text>();
+		LevelData.SetSceneManaBeforeDiagnose( SceneManager.GetActiveScene().buildIndex, int.Parse(costTextUI.text));
+	}
+
+	public void loadManaAndSceneBeforeDiagnose(){
+		SceneManager.LoadScene (LevelData.GetSceneBeforeDiagnose());
+	}
 }
