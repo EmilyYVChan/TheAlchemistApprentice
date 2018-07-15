@@ -28,4 +28,8 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene(executeSceneName);
     }
+
+	public void clearLevelDataUponLoadingNextLevel(){
+		LevelData.ClearLevelData ();
+	}
 }

@@ -69,5 +69,14 @@ using UnityEngine;
 	public static int GetTotalCost(){
 		return totalCost;
 	}
+
+	public static void ClearLevelData(){
+		totalCost = 0;
+		currentMana = 0;
+		currentIteration = 1;
+		inspectedPotions = new List<string>();
+		executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
+		currentActivePath = 0;
+	}
 }
 
