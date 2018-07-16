@@ -40,6 +40,10 @@ using UnityEngine;
 		{
 			currentIteration++;
 		}
+		
+	public static void resetIterationCount() {
+		currentIteration = 1;
+	}
 
 		public static void addInspectedPotion(string potionName){
 		inspectedPotions.Add (potionName);
