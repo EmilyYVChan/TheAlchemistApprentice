@@ -80,6 +80,13 @@ public class ExecutePotionScript : PotionScript
 
 	public void HideBreakpointText(){
 		breakpointText.SetActive (false);
+		Text text = breakpointText.GetComponent<Text> ();
+		text.color = new Color (1f, 1f, 1f, 1f); // white
+	}
+
+	public void ChangeBreakpointTextColour(){
+		Text text = breakpointText.GetComponent<Text> ();
+		text.color = new Color (1f, 1f, 0f, 1f); // yellow
 	}
 
 	public static int GetAllBreakpoints(){
@@ -93,5 +100,6 @@ public class ExecutePotionScript : PotionScript
 		}
 		return count;
 	}
+
 }
 
