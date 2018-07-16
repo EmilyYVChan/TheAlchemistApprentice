@@ -133,7 +133,6 @@ public class ExecutePathSelectScript : MonoBehaviour
 		potionStepCount ++;
 		PopulatePreviousOutputs (potion, matchingIndex);
 
-		Debug.Log (" potion: " + potion.gameObject.name + " has breakpioint ? : " + potion.PotionHasBreakpoint ());
 		Debug.Log ("matching index : " + matchingIndex);
 		if (potion.PotionHasBreakpoint ()) {
 			// hide original inputs and outputs 	
@@ -141,6 +140,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 			// display actual inputs and outputs
 			DisplayActualInputOutput (potion, matchingIndex);
+
+			// change breakpoint text colour to indicate it has been executed
+			potion.ChangeBreakpointTextColour();
 			potion.ClearBreakpoint ();
 
 			// add cost for displaying actual inputs and outputs

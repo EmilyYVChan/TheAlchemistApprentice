@@ -82,6 +82,11 @@ public class ExecutePotionScript : PotionScript
 		breakpointText.SetActive (false);
 	}
 
+	public void ChangeBreakpointTextColour(){
+		Text text = breakpointText.GetComponent<Text> ();
+		text.color = new Color (1f, 1f, 0f, 1f); // yellow
+	}
+
 	public static int GetAllBreakpoints(){
 		GameObject[] potions = GameObject.FindGameObjectsWithTag ("Potion");
 		int count = 0;
@@ -93,5 +98,6 @@ public class ExecutePotionScript : PotionScript
 		}
 		return count;
 	}
+
 }
 
