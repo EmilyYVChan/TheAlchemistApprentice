@@ -80,6 +80,8 @@ public class ExecutePotionScript : PotionScript
 
 	public void HideBreakpointText(){
 		breakpointText.SetActive (false);
+		Text text = breakpointText.GetComponent<Text> ();
+		text.color = new Color (1f, 1f, 1f, 1f); // white
 	}
 
 	public void ChangeBreakpointTextColour(){
