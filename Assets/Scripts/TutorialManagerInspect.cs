@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 
 public class TutorialManagerInspect : MonoBehaviour {
-
+    public GameObject Tut_GameGoal;
     public GameObject Tut_InspectComponent;
     public GameObject Tut_ComponentBhvrDialogue;
     public GameObject Tut_ComponentBhvrGraph;
@@ -12,8 +12,11 @@ public class TutorialManagerInspect : MonoBehaviour {
     public GameObject Tut_Execute;
 
     public GameObject Dialogue;
+    public GameObject CanvasInspect;
+    public GameObject TutorialGraph;
 
-    private static bool shouldShowInspectComponent = true;
+    private static bool shouldShowGameGoal = true;
+    private static bool shouldShowInspectComponent = false;
     private static bool shouldShowComponentBhvrDialogue = false;
     private static bool shouldShowComponentBhvrGraph = false;
     private static bool shouldShowCost = false;
@@ -33,10 +36,11 @@ public class TutorialManagerInspect : MonoBehaviour {
         //assignGameObjectsFields();
         disableAllTutorialComponents();
 
-        if (shouldShowInspectComponent)
+        if (shouldShowGameGoal)
         {
-            Tut_InspectComponent.SetActive(true);
-            shouldShowInspectComponent = false;
+            Tut_GameGoal.SetActive(true);
+            shouldShowGameGoal = false;
+            disableOtherClickableUIs();
         }
                 
     }
@@ -48,6 +52,7 @@ public class TutorialManagerInspect : MonoBehaviour {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null)
             {
+                Debug.Log("hit.collider.gameobject.name = " + hit.collider.gameObject.name);
                 if (hit.collider.gameObject.name == "RedPotion")
                 {
                     disableAllTutorialComponents();
@@ -56,14 +61,16 @@ public class TutorialManagerInspect : MonoBehaviour {
 
                     hasAlreadyInspectedOneComponent = true;
 
-                } else if (!hasShownExecute && 
-                    hasAlreadyInspectedOneComponent && 
-                    (hit.collider.gameObject.name == "YellowPotion" || hit.collider.gameObject.name == "PinkPotion" || hit.collider.gameObject.name == "BluePotion"))
+                }
+                else if (!hasShownExecute &&
+                  hasAlreadyInspectedOneComponent &&
+                  (hit.collider.gameObject.name == "YellowPotion" || hit.collider.gameObject.name == "PinkPotion" || hit.collider.gameObject.name == "BluePotion"))
                 {
                     shouldShowExecute = true;
                 }
             } else
-            {                
+            {
+                enableOtherClickableUIs();
                 disableAllTutorialComponents();
             }            
         }
@@ -79,6 +86,18 @@ public class TutorialManagerInspect : MonoBehaviour {
 
 
     //------------Helper methods
+    private void enableOtherClickableUIs()
+    {
+        CanvasInspect.SetActive(true);
+        TutorialGraph.SetActive(true);
+    }
+
+    private void disableOtherClickableUIs()
+    {
+        CanvasInspect.SetActive(false);
+        TutorialGraph.SetActive(false);
+    }
+
     private void assignGameObjectsFields()
     {
         Tut_InspectComponent = GameObject.Find("Tut_InspectComponent");
@@ -92,6 +111,7 @@ public class TutorialManagerInspect : MonoBehaviour {
 
     private void disableAllTutorialComponents()
     {
+        Tut_GameGoal.SetActive(false);
         Tut_InspectComponent.SetActive(false);
         Tut_ComponentBhvrDialogue.SetActive(false);
         Tut_ComponentBhvrGraph.SetActive(false);
@@ -103,6 +123,12 @@ public class TutorialManagerInspect : MonoBehaviour {
 
     private void updateComponentActiveness()
     {
+        if (shouldShowInspectComponent && Tut_GameGoal.activeSelf == false)
+        {
+            Tut_InspectComponent.SetActive(true);
+            shouldShowInspectComponent = false;
+        }
+
         if (shouldShowComponentBhvrDialogue && Tut_InspectComponent.activeSelf == false)
         {
             Tut_ComponentBhvrDialogue.SetActive(true);
