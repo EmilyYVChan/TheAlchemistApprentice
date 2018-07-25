@@ -40,6 +40,7 @@ public class TutorialManagerInspect : MonoBehaviour {
         {
             Tut_GameGoal.SetActive(true);
             shouldShowGameGoal = false;
+            shouldShowInspectComponent = true;
             disableOtherClickableUIs();
         }
                 
