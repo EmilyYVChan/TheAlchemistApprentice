@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 
 public class TutorialManagerInspect : MonoBehaviour {
-    public GameObject Tut_GameGoal;
     public GameObject Tut_InspectComponent;
     public GameObject Tut_ComponentBhvrDialogue;
     public GameObject Tut_ComponentBhvrGraph;
@@ -12,11 +11,8 @@ public class TutorialManagerInspect : MonoBehaviour {
     public GameObject Tut_Execute;
 
     public GameObject Dialogue;
-    public GameObject CanvasInspect;
-    public GameObject TutorialGraph;
-
-    private static bool shouldShowGameGoal = true;
-    private static bool shouldShowInspectComponent = false;
+    
+    private static bool shouldShowInspectComponent = true;
     private static bool shouldShowComponentBhvrDialogue = false;
     private static bool shouldShowComponentBhvrGraph = false;
     private static bool shouldShowCost = false;
@@ -36,12 +32,10 @@ public class TutorialManagerInspect : MonoBehaviour {
         //assignGameObjectsFields();
         disableAllTutorialComponents();
 
-        if (shouldShowGameGoal)
+        if (shouldShowInspectComponent)
         {
-            Tut_GameGoal.SetActive(true);
-            shouldShowGameGoal = false;
-            shouldShowInspectComponent = true;
-            disableOtherClickableUIs();
+            Tut_InspectComponent.SetActive(true);
+            shouldShowInspectComponent = false;
         }
                 
     }
@@ -71,7 +65,6 @@ public class TutorialManagerInspect : MonoBehaviour {
                 }
             } else
             {
-                enableOtherClickableUIs();
                 disableAllTutorialComponents();
             }            
         }
@@ -87,17 +80,6 @@ public class TutorialManagerInspect : MonoBehaviour {
 
 
     //------------Helper methods
-    private void enableOtherClickableUIs()
-    {
-        CanvasInspect.SetActive(true);
-        TutorialGraph.SetActive(true);
-    }
-
-    private void disableOtherClickableUIs()
-    {
-        CanvasInspect.SetActive(false);
-        TutorialGraph.SetActive(false);
-    }
 
     private void assignGameObjectsFields()
     {
@@ -112,7 +94,6 @@ public class TutorialManagerInspect : MonoBehaviour {
 
     private void disableAllTutorialComponents()
     {
-        Tut_GameGoal.SetActive(false);
         Tut_InspectComponent.SetActive(false);
         Tut_ComponentBhvrDialogue.SetActive(false);
         Tut_ComponentBhvrGraph.SetActive(false);
@@ -124,11 +105,6 @@ public class TutorialManagerInspect : MonoBehaviour {
 
     private void updateComponentActiveness()
     {
-        if (shouldShowInspectComponent && Tut_GameGoal.activeSelf == false)
-        {
-            Tut_InspectComponent.SetActive(true);
-            shouldShowInspectComponent = false;
-        }
 
         if (shouldShowComponentBhvrDialogue && Tut_InspectComponent.activeSelf == false)
         {
