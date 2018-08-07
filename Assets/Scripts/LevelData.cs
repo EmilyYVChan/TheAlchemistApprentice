@@ -15,7 +15,7 @@ using UnityEngine;
 		private static int sceneBeforeDiagnose = -1;
 		private static int manaBeforeDiagnose = -1;
 
-	private static string currentStageName = null;
+	private static string currentStageName = "Study";
 
 		public static void setCurrentMana(int mana)
 		{
@@ -88,7 +88,7 @@ using UnityEngine;
 		currentActivePath = 0;
 		sceneBeforeDiagnose = -1;
 		manaBeforeDiagnose = -1;
-		currentStageName = null;
+		currentStageName =  "Study";
 	}
 
 	public static void SetSceneManaBeforeDiagnose(int sceneNumber, int mana){
