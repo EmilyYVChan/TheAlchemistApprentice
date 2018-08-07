@@ -12,8 +12,10 @@ using UnityEngine;
 		private static List<PotionPathIndexPair> executedPotionPathIndexPairs = new List<PotionPathIndexPair>();
 		private static int currentActivePath;
 
-	private static int sceneBeforeDiagnose = -1;
-	private static int manaBeforeDiagnose = -1;
+		private static int sceneBeforeDiagnose = -1;
+		private static int manaBeforeDiagnose = -1;
+
+	private static string currentStageName = null;
 
 		public static void setCurrentMana(int mana)
 		{
@@ -86,6 +88,7 @@ using UnityEngine;
 		currentActivePath = 0;
 		sceneBeforeDiagnose = -1;
 		manaBeforeDiagnose = -1;
+		currentStageName = null;
 	}
 
 	public static void SetSceneManaBeforeDiagnose(int sceneNumber, int mana){
@@ -99,6 +102,14 @@ using UnityEngine;
 
 	public static int GetManaBeforeDiagnose(){
 		return manaBeforeDiagnose;
+	}
+
+	public static void SetCurrentStage (string currentStage){
+		currentStageName = currentStage;
+	}
+
+	public static string GetCurrentStage (){
+		return currentStageName;
 	}
 }
 

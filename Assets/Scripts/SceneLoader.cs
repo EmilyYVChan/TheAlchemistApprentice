@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -8,28 +9,15 @@ public class SceneLoader : MonoBehaviour
 	private string executeSceneName = "TutorialExecuteScene";
 	private string inspectSceneName = "TutorialScene";
 
+	public virtual void Start () {
+		changeButtonColour ();
+	}
+
 	public void loadScene(int sceneNumber)
 	{
 		SceneManager.LoadScene(sceneNumber);
 	}
-
-	public void loadTutorialInspectScene()
-	{
-		Debug.Log ("load tutorial inspect?");
-		SceneManager.LoadScene(inspectSceneName);
-		LevelData.incrementIteration();
-
-		if (LevelData.getCurrentIteration() == 2)
-		{
-			TutorialManagerInspect.setIsSecondIteration();
-		}
-	}
-
-	public void loadTutorialExecuteScene()
-	{
-		SceneManager.LoadScene(executeSceneName);
-	}
-
+		
 	public void clearLevelDataUponLoadingNextLevel(){
 		LevelData.ClearLevelData ();
 	}
@@ -51,5 +39,18 @@ public class SceneLoader : MonoBehaviour
 		{
 			TutorialManagerInspect.setIsSecondIteration();
 		}
+	}
+
+	private void changeButtonColour(){
+		string currentStageName = LevelData.GetCurrentStage ();
+		if (currentStageName != null) {
+
+			Image img = GameObject.Find (currentStageName).GetComponent<Image>();
+			img.color = new Color (0.5f,1f,0.2f,1f);
+		}
+	}
+
+	public void setCurrentStage(string name){
+		LevelData.SetCurrentStage (name);
 	}
 }
