@@ -5,186 +5,109 @@ using UnityEngine.UI;
 
 public class TutorialManagerExecute : MonoBehaviour {
 
-    public GameObject Tut_DimmedExpected;
-    public GameObject Tut_ChooseInput;
-    public GameObject Tut_SetBreakpoint;
-    public GameObject Tut_SetBreakpoint2;
-    public GameObject Tut_Run1Step;
-    public GameObject Tut_ViewActual;
-	public GameObject Tut_Cost;
-    public GameObject Tut_Run1Step2;
-    public GameObject Tut_ReplacedExpected;
-    public GameObject Tut_NoBreakpoint;
+    public List<GameObject> tutorialGuides;
+    public static int currentGuide = 0;
 
-    private static bool shouldShowDimmedExpected = true;
-    private static bool shouldShowChooseInput = false;
-    private static bool shouldShowSetBreakpoint = false;
-    private static bool shouldShowSetBreakpoint2 = false;
-    private static bool shouldShowRun1Step = false;
-    private static bool shouldShowViewActual = false;
-	private static bool shouldShowCost = false;
-    private static bool shouldShowRun1Step2 = false;
-    private static bool shouldShowReplacedExpected = false;
-    private static bool shouldShowNoBreakpoint = false;
-
-    //private static bool skipShowRun1Step2 = false;
+    public List<GameObject> tutorialGuidesWithOKButtons;
+    private BoxCollider2D[] allBoxCollidersInScene;
 
     // Use this for initialization
     void Start()
     {
+        allBoxCollidersInScene = FindObjectsOfType<BoxCollider2D>();
         disableAllTutorialComponents();
 
-        if (shouldShowDimmedExpected)
-        {
-            Tut_DimmedExpected.SetActive(true);
-            shouldShowDimmedExpected = false;
-            shouldShowChooseInput = true;
-        }
+        if (currentGuide == -1) { return; }
+
+        updateComponentActiveness();
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (currentGuide == -1) { return; }
+
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-
             if (hit.collider != null)
             {
                 string hitColliderGameObjectName = hit.collider.gameObject.name;
-//                Debug.Log(hitColliderGameObjectName);
-                if (hitColliderGameObjectName == "air"
-                    && Tut_ChooseInput.activeSelf == true)
+                Debug.Log(hitColliderGameObjectName);
+                if ((hitColliderGameObjectName == "waterInput1" && currentGuide == 1) ||
+                    (hitColliderGameObjectName == "BluePotion" && currentGuide == 2) || 
+                    (hitColliderGameObjectName == "PinkPotion" && currentGuide == 4))
                 {
-                    disableAllTutorialComponents();
-                    shouldShowChooseInput = false;
-                    shouldShowSetBreakpoint = true;
-                } else if (hitColliderGameObjectName == "PinkPotion"
-                    && Tut_SetBreakpoint.activeSelf == true)
-                {
-                    disableAllTutorialComponents();
-                    shouldShowSetBreakpoint = false;
-                    shouldShowSetBreakpoint2 = true;
-                } else if (hitColliderGameObjectName == "RedPotion"
-                    && Tut_SetBreakpoint2.activeSelf == true)
-                {
-                    disableAllTutorialComponents();
-                    shouldShowSetBreakpoint2 = false;
-                    shouldShowRun1Step = true;
-                } else if (hitColliderGameObjectName == "RunStepBtn"
-                    && Tut_Run1Step.activeSelf == true)
-                {
-                    disableAllTutorialComponents();
-                    shouldShowRun1Step = false;
-					//shouldShowCost = true;
-					shouldShowViewActual = true;
-                } else if (hitColliderGameObjectName == "RunStepBtn"
-                    && Tut_Run1Step2.activeSelf == true)
-                {
-                    disableAllTutorialComponents();
-                    shouldShowRun1Step2 = false;
-                    shouldShowReplacedExpected = true;
-                } else if (hitColliderGameObjectName == "RunStepBtn"
-                    && Tut_ViewActual.activeSelf == true)
-                {
-                    disableAllTutorialComponents();
-                    shouldShowRun1Step2 = false;
-                    shouldShowReplacedExpected = true;
+                    moveToNextTutorialGuide();
                 }
             }
-            else
-            {
-                disableAllTutorialComponents();
+        }
+    }
 
-                if (shouldShowDimmedExpected && !shouldShowChooseInput)
-                {
-                    shouldShowDimmedExpected = false;
-                    shouldShowChooseInput = true;
-                }
-            }
+    //------------Helper methods
+    public void moveToNextTutorialGuide()
+    {
+        if (currentGuide == -1) { return; };
+        disableAllTutorialComponents();
+        currentGuide++;
+        if (currentGuide == tutorialGuides.Capacity)
+        {
+            currentGuide = -1;
         }
         updateComponentActiveness();
     }
 
-    //------------Helper methods
     private void disableAllTutorialComponents()
     {
-        Tut_DimmedExpected.SetActive(false);
-        Tut_ChooseInput.SetActive(false);
-        Tut_SetBreakpoint.SetActive(false);
-        Tut_SetBreakpoint2.SetActive(false);
-        Tut_Run1Step.SetActive(false);
-        Tut_ViewActual.SetActive(false);
-        Tut_Run1Step2.SetActive(false);
-        Tut_ReplacedExpected.SetActive(false);
-        Tut_NoBreakpoint.SetActive(false);
-		Tut_Cost.SetActive (false);
+        foreach (GameObject go in tutorialGuides)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    private void disableEveryOtherBoxCollider()
+    {
+        foreach (BoxCollider2D b in allBoxCollidersInScene)
+        {
+            b.enabled = false;
+        }
+
+        foreach (GameObject go in tutorialGuidesWithOKButtons)
+        {
+            go.GetComponent<BoxCollider2D>().enabled = true;
+        }
+    }
+
+    public void enableAllBoxCollider()
+    {
+        foreach (BoxCollider2D b in allBoxCollidersInScene)
+        {
+            b.enabled = true;
+        }
     }
 
     private void updateComponentActiveness()
     {
-        if (shouldShowChooseInput && Tut_DimmedExpected.activeSelf == false)
+        if (currentGuide == 0 || currentGuide == 3 || currentGuide == 6 || currentGuide == 7 || 
+            currentGuide == 9 || currentGuide == 10 || currentGuide == 11 || currentGuide == 12 || currentGuide == 13)
         {
-            Tut_ChooseInput.SetActive(true);
+            disableEveryOtherBoxCollider();
+        }
+        else
+        {
+            enableAllBoxCollider();
         }
 
-        if (shouldShowSetBreakpoint && Tut_ChooseInput.activeSelf == false)
+        if (currentGuide == -1) { return; }
+        tutorialGuides[currentGuide].SetActive(true);
+    }
+
+    public void runOneStepFollowingTutorial()
+    {
+        if (currentGuide == 5 || currentGuide == 8)
         {
-            Tut_SetBreakpoint.SetActive(true);
+            moveToNextTutorialGuide();
         }
-
-        if (shouldShowSetBreakpoint2 && Tut_SetBreakpoint.activeSelf == false)
-        {
-            Tut_SetBreakpoint2.SetActive(true);
-        }
-
-        if (shouldShowRun1Step && Tut_SetBreakpoint2.activeSelf == false)
-        {
-            Tut_Run1Step.SetActive(true);
-        }
-
-		/*if (shouldShowCost && Tut_Run1Step.activeSelf == false) {
-			Tut_Cost.SetActive (true);
-			shouldShowCost = false;
-			shouldShowViewActual = true;
-		}
-
-		if (shouldShowViewActual && Tut_Cost.activeSelf == false) {
-			Tut_ViewActual.SetActive(true);
-			shouldShowViewActual = false;
-			shouldShowRun1Step2 = true;
-		}*/
-
-        if (shouldShowViewActual && Tut_Run1Step.activeSelf == false)
-        {
-            Tut_ViewActual.SetActive(true);
-            shouldShowViewActual = false;
-            shouldShowRun1Step2 = true;
-        }
-
-        if (shouldShowRun1Step2 && Tut_ViewActual.activeSelf == false)
-        {
-            Tut_Run1Step2.SetActive(true);
-        }
-
-        if (shouldShowReplacedExpected && Tut_Run1Step2.activeSelf == false)
-        {
-            Tut_ReplacedExpected.SetActive(true);
-            shouldShowReplacedExpected = false;
-            shouldShowNoBreakpoint = true;
-        }
-
-        if (shouldShowNoBreakpoint && Tut_ReplacedExpected.activeSelf == false)
-        {
-            Tut_NoBreakpoint.SetActive(true);
-            shouldShowNoBreakpoint = false;
-			shouldShowCost = true;
-        }
-
-		if (shouldShowCost && Tut_NoBreakpoint.activeSelf == false) {
-			Tut_Cost.SetActive (true);
-			shouldShowCost = false;
-		}
     }
 }
