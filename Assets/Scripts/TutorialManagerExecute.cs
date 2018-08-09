@@ -11,6 +11,12 @@ public class TutorialManagerExecute : MonoBehaviour {
     public List<GameObject> tutorialGuidesWithOKButtons;
     private BoxCollider2D[] allBoxCollidersInScene;
 
+    public GameObject handPointingToPot2;
+    public GameObject handPointingToPot3;
+
+    public GameObject airInput;
+    public GameObject waterInput;
+
     // Use this for initialization
     void Start()
     {
@@ -92,6 +98,18 @@ public class TutorialManagerExecute : MonoBehaviour {
         if (currentGuide == 0 || currentGuide == 3 || currentGuide == 6 || currentGuide == 7 || 
             currentGuide == 9 || currentGuide == 10 || currentGuide == 11 || currentGuide == 12 || currentGuide == 13)
         {
+            if (currentGuide == 3)
+            {
+                if (airInput.GetComponent<ExecutePathSelectScript>().isActive == true) //potion 2 is on highlighted path
+                {
+                    handPointingToPot2.SetActive(false);
+                    handPointingToPot3.SetActive(true);
+                } else //potion 3 is on highlighted path
+                {
+                    handPointingToPot2.SetActive(true);
+                    handPointingToPot3.SetActive(false);
+                }
+            }
             disableEveryOtherBoxCollider();
         }
         else
