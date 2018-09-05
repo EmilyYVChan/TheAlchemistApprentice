@@ -106,6 +106,10 @@ public class PotionScript : MonoBehaviour {
 			// disable buttons behind the dialogue
 			DisableButtons();
 		}
+		else if (currentCost - (costOfInspectionPerFormula * inputs.Count) <= 0){
+			// show warning if mana is 0
+			dialogue.SetActive (true);
+		}
     }
 		
 	private void UpdateDialogue()

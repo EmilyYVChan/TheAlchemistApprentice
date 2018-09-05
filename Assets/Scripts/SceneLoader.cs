@@ -46,7 +46,7 @@ public class SceneLoader : MonoBehaviour
 		if (currentStageName != null) {
 
 			Image img = GameObject.Find (currentStageName).GetComponent<Image>();
-			img.color = new Color (0.5f,1f,0.2f,1f);
+			img.color = new Color (0.87f,1f,0.22f,1f);
 		}
 	}
 
