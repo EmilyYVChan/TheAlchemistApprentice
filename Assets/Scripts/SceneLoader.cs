@@ -44,9 +44,12 @@ public class SceneLoader : MonoBehaviour
 	private void changeButtonColour(){
 		string currentStageName = LevelData.GetCurrentStage ();
 		if (currentStageName != null) {
-
+			
 			Image img = GameObject.Find (currentStageName).GetComponent<Image>();
 			img.color = new Color (0.87f,1f,0.22f,1f);
+
+			Button btn = GameObject.Find (currentStageName).GetComponent<Button> ();
+			btn.interactable = false;
 		}
 	}
 
