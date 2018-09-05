@@ -57,16 +57,17 @@ public class ExecutePotionScript : PotionScript
 			tempCurrentMana = LevelData.getCurrentMana () - GetAllBreakpoints () - 1; 
 		}
 	
-		if ((!LevelData.isPotionExecuted(new PotionPathIndexPair(this.gameObject.name, LevelData.getCurrentActivePath()))) && (tempCurrentMana >= 0))
-		{
+		if ((!LevelData.isPotionExecuted (new PotionPathIndexPair (this.gameObject.name, LevelData.getCurrentActivePath ()))) && (tempCurrentMana >= 0)) {
 			Debug.Log ("not executed!!");
 			hasBreakpoint = !hasBreakpoint;
 			breakpointText.SetActive (hasBreakpoint);
-			Button runOneStepBtn = GameObject.Find("RunStepBtn").GetComponent<Button>();
+			Button runOneStepBtn = GameObject.Find ("RunStepBtn").GetComponent<Button> ();
 			runOneStepBtn.interactable = (GetAllBreakpoints () != 0);
 			if (!runOneStepBtn.interactable) {
 				ExecutePathSelectScript.ClearPotionStepCount ();
 			}
+		} else if (tempCurrentMana < 0) {
+			dialogue.SetActive (true);
 		}
 	}
 

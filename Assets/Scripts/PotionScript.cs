@@ -106,9 +106,21 @@ public class PotionScript : MonoBehaviour {
 			// disable buttons behind the dialogue
 			DisableButtons();
 		}
-		else if (currentCost - (costOfInspectionPerFormula * inputs.Count) <= 0){
+		else if (currentCost - (costOfInspectionPerFormula * inputs.Count) < 0){
 			// show warning if mana is 0
 			dialogue.SetActive (true);
+
+			// clear existing children
+			foreach (Transform child in dialogue.transform)
+			{
+				if (child.gameObject.tag.Equals("Formula"))
+				{
+					child.gameObject.SetActive (false);
+				}
+			}
+
+			// show message
+			dialogue.transform.Find("Warning").gameObject.SetActive(true);
 		}
     }
 		
