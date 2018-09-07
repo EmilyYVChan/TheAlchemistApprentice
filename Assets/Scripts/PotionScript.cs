@@ -101,7 +101,9 @@ public class PotionScript : MonoBehaviour {
 			}
 
 			// display formula in dialogue
-			UpdateDialogue ();
+			//UpdateDialogue (); // -- do not display formula in dialogue anymore - 7/09/2018
+
+			UpdateFormula ();
 
 			// disable buttons behind the dialogue
 			DisableButtons();
@@ -141,6 +143,19 @@ public class PotionScript : MonoBehaviour {
 		{
 			formula.SetActive (true);
 			formula.transform.SetParent(dialogue.transform);
+		}
+	}
+
+	private void UpdateFormula(){
+		GameObject[] allFormulae = GameObject.FindGameObjectsWithTag ("Formula");
+		// clear currently showing formula
+		foreach (GameObject f in allFormulae)
+		{
+			if (formulae.Contains (f)) {
+				f.SetActive (true);
+			} else {
+				f.SetActive (false);
+			}
 		}
 	}
 
