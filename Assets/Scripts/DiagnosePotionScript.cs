@@ -44,6 +44,7 @@ public class DiagnosePotionScript : ExecutePotionScript {
 		} else {
 			Text costTextUI = GameObject.Find("Cost").GetComponent<Text>();
 			LevelData.addCost(int.Parse(costTextUI.text) * -1);
+			dialogue.SetActive (true);
 		}
 	}
 }
