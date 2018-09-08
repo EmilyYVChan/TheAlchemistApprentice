@@ -1,14 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class TutorialManagerInspect : MonoBehaviour {
-    public GameObject Tut_InspectComponent;
-    public GameObject Tut_ComponentBhvrDialogue;
-    public GameObject Tut_ComponentBhvrGraph;
-    public GameObject Tut_Cost;
-    public GameObject Tut_Iteration;
-    public GameObject Tut_Diagnose;
+
+    public List<GameObject> tutorialGuides;
+    public static int currentGuide = 0;
+
+    public GameObject Tut_InspectComponent1;
+    public GameObject Tut_Cost1;
+    public GameObject Tut_InspectComponent2;
+    public GameObject Tut_Cost2;
     public GameObject Tut_Execute;
+
+    private BoxCollider2D colliderCost1;
+    private BoxCollider2D colliderCost2;
+
+    private BoxCollider2D[] allBoxCollidersInScene;
 
     public GameObject Dialogue;
     
@@ -28,47 +36,36 @@ public class TutorialManagerInspect : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
-        //assignGameObjectsFields();
+    void Start ()
+    {
+        colliderCost1 = Tut_Cost1.transform.GetChild(3).GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+        colliderCost2 = Tut_Cost2.transform.GetChild(3).GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+
         disableAllTutorialComponents();
 
-        if (shouldShowInspectComponent)
-        {
-            Tut_InspectComponent.SetActive(true);
-            shouldShowInspectComponent = false;
-        }
-                
+        if (currentGuide == -1) { return; }
+
+        tutorialGuides[currentGuide].SetActive(true);
+
+        allBoxCollidersInScene = FindObjectsOfType<BoxCollider2D>();
     }
 
     void Update()
     {
+        if (currentGuide == -1) { return; }
+
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider != null)
             {
-                Debug.Log("hit.collider.gameobject.name = " + hit.collider.gameObject.name);
-                if (hit.collider.gameObject.name == "RedPotion")
+                string hitColliderGameObjectName = hit.collider.gameObject.name;
+                if ((hitColliderGameObjectName == "RedPotion" && currentGuide == 0) || (hitColliderGameObjectName == "BluePotion" && currentGuide == 2))
                 {
-                    disableAllTutorialComponents();
-                    shouldShowComponentBhvrDialogue = true;
-                    updateComponentActiveness();
-
-                    hasAlreadyInspectedOneComponent = true;
-
+                    moveToNextTutorialGuide();
                 }
-                else if (!hasShownExecute &&
-                  hasAlreadyInspectedOneComponent &&
-                  (hit.collider.gameObject.name == "YellowPotion" || hit.collider.gameObject.name == "PinkPotion" || hit.collider.gameObject.name == "BluePotion"))
-                {
-                    shouldShowExecute = true;
-                }
-            } else
-            {
-                disableAllTutorialComponents();
-            }            
+            }         
         }
-        updateComponentActiveness();
     }
 
     public static void setIsSecondIteration()
@@ -80,70 +77,56 @@ public class TutorialManagerInspect : MonoBehaviour {
 
 
     //------------Helper methods
-
-    private void assignGameObjectsFields()
+    public void moveToNextTutorialGuide()
     {
-        Tut_InspectComponent = GameObject.Find("Tut_InspectComponent");
-        Tut_ComponentBhvrDialogue = GameObject.Find("Tut_ComponentBhvrDialogue");
-        Tut_ComponentBhvrGraph = GameObject.Find("Tut_ComponentBhvrGraph");
-        Tut_Cost = GameObject.Find("Tut_Cost");
-        Tut_Iteration = GameObject.Find("Tut_Iteration");
-        Tut_Diagnose = GameObject.Find("Tut_Diagnose");
-        Tut_Execute = GameObject.Find("Tut_Execute");
+        if (currentGuide == -1) { return; };
+        disableAllTutorialComponents();
+        currentGuide++;
+        if (currentGuide == tutorialGuides.Capacity)
+        {
+            currentGuide = -1;
+        }
+        updateComponentActiveness();
     }
 
     private void disableAllTutorialComponents()
     {
-        Tut_InspectComponent.SetActive(false);
-        Tut_ComponentBhvrDialogue.SetActive(false);
-        Tut_ComponentBhvrGraph.SetActive(false);
-        Tut_Cost.SetActive(false);
-        Tut_Iteration.SetActive(false);
-        Tut_Diagnose.SetActive(false);
-        Tut_Execute.SetActive(false);
+        foreach (GameObject go in tutorialGuides)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    private void disableEveryOtherBoxCollider()
+    {
+        foreach (BoxCollider2D b in allBoxCollidersInScene)
+        {
+            b.enabled = false;
+        }
+
+        colliderCost1.enabled = true;
+        colliderCost2.enabled = true;
+    }
+
+    public void enableAllBoxCollider()
+    {
+        foreach (BoxCollider2D b in allBoxCollidersInScene)
+        {
+            b.enabled = true;
+        }
     }
 
     private void updateComponentActiveness()
     {
-
-        if (shouldShowComponentBhvrDialogue && Tut_InspectComponent.activeSelf == false)
+        if (currentGuide == 1 || currentGuide == 3)
         {
-            Tut_ComponentBhvrDialogue.SetActive(true);
-            shouldShowComponentBhvrDialogue = false;
-            shouldShowComponentBhvrGraph = true;
+            disableEveryOtherBoxCollider();
+        } else
+        {
+            enableAllBoxCollider();
         }
 
-        if (shouldShowComponentBhvrGraph && Tut_ComponentBhvrDialogue.activeSelf == false)
-        {
-            Tut_ComponentBhvrGraph.SetActive(true);
-            shouldShowComponentBhvrGraph = false;
-            shouldShowCost = true;
-        }
-
-        if (shouldShowCost && Tut_ComponentBhvrGraph.activeSelf == false)
-        {
-            Tut_Cost.SetActive(true);
-            shouldShowCost = false;
-        }
-
-        if (isSecondIteration && shouldShowIteration)
-        {
-            Tut_Iteration.SetActive(true);
-            shouldShowIteration = false;
-            shouldShowDiagnose = true;
-        }
-
-        if (isSecondIteration && shouldShowDiagnose && Tut_Iteration.activeSelf == false)
-        {
-            Tut_Diagnose.SetActive(true);
-            shouldShowDiagnose = false;
-        }
-
-        if (shouldShowExecute && Dialogue.activeSelf == false && !hasBeenToExecuteStage)
-        {
-            Tut_Execute.SetActive(true);
-            shouldShowExecute = false;
-            hasShownExecute = true;
-        }
+        if (currentGuide == -1) { return; }
+        tutorialGuides[currentGuide].SetActive(true);
     }
 }
