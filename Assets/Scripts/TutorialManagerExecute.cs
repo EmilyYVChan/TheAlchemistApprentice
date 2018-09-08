@@ -17,6 +17,16 @@ public class TutorialManagerExecute : MonoBehaviour {
     public GameObject airInput;
     public GameObject waterInput;
 
+    private int guideNumChooseInput1 = 1;
+    private int guideNumChooseInput2 = 100;
+    private int guideNumSetBreakpoint1 = 2;
+    private int guideNumSetBreakpoint2 = 4;
+    private int guideNumSetBreakpoint3;
+    private int guideNumBreakpointRestriction = 3;
+    private int guideNumRunOneStep1 = 5;
+    private int guideNumRunOneStep2 = 8;
+    private int guideNumRunOneStep3 = 100;
+
     // Use this for initialization
     void Start()
     {
@@ -41,9 +51,11 @@ public class TutorialManagerExecute : MonoBehaviour {
             {
                 string hitColliderGameObjectName = hit.collider.gameObject.name;
                 Debug.Log(hitColliderGameObjectName);
-                if ((hitColliderGameObjectName == "waterInput1" && currentGuide == 1) ||
-                    (hitColliderGameObjectName == "BluePotion" && currentGuide == 2) || 
-                    (hitColliderGameObjectName == "PinkPotion" && currentGuide == 4))
+                if ((hitColliderGameObjectName == "waterInput1" && currentGuide == guideNumChooseInput1) ||
+                    (hitColliderGameObjectName == "air" && currentGuide == guideNumChooseInput2) ||
+                    (hitColliderGameObjectName == "RedPotion" && currentGuide == guideNumSetBreakpoint3) ||
+                    (hitColliderGameObjectName == "BluePotion" && currentGuide == guideNumSetBreakpoint1) || 
+                    (hitColliderGameObjectName == "PinkPotion" && currentGuide == guideNumSetBreakpoint2))
                 {
                     moveToNextTutorialGuide();
                 }
@@ -96,9 +108,9 @@ public class TutorialManagerExecute : MonoBehaviour {
     private void updateComponentActiveness()
     {
         if (currentGuide == 0 || currentGuide == 3 || currentGuide == 6 || currentGuide == 7 || 
-            currentGuide == 9 || currentGuide == 10 || currentGuide == 11 || currentGuide == 12 || currentGuide == 13)
+            currentGuide == 9 || currentGuide == 10 || currentGuide == 11 || currentGuide == 12 || currentGuide == 13) //guides with OK buttons
         {
-            if (currentGuide == 3)
+            if (currentGuide == guideNumBreakpointRestriction)
             {
                 if (airInput.GetComponent<ExecutePathSelectScript>().isActive == true) //potion 2 is on highlighted path
                 {
@@ -123,7 +135,7 @@ public class TutorialManagerExecute : MonoBehaviour {
 
     public void runOneStepFollowingTutorial()
     {
-        if (currentGuide == 5 || currentGuide == 8)
+        if (currentGuide == guideNumRunOneStep1 || currentGuide == guideNumRunOneStep2 || currentGuide == guideNumRunOneStep3) 
         {
             moveToNextTutorialGuide();
         }
