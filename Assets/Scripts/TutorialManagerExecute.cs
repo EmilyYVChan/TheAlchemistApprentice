@@ -18,14 +18,14 @@ public class TutorialManagerExecute : MonoBehaviour {
     public GameObject waterInput;
 
     private int guideNumChooseInput1 = 1;
-    private int guideNumChooseInput2 = 100;
+    private int guideNumChooseInput2 = 11;
     private int guideNumSetBreakpoint1 = 2;
     private int guideNumSetBreakpoint2 = 4;
-    private int guideNumSetBreakpoint3;
+    private int guideNumSetBreakpoint3 = 12;
     private int guideNumBreakpointRestriction = 3;
     private int guideNumRunOneStep1 = 5;
     private int guideNumRunOneStep2 = 8;
-    private int guideNumRunOneStep3 = 100;
+    private int guideNumRunOneStep3 = 13;
 
     // Use this for initialization
     void Start()
@@ -108,7 +108,7 @@ public class TutorialManagerExecute : MonoBehaviour {
     private void updateComponentActiveness()
     {
         if (currentGuide == 0 || currentGuide == 3 || currentGuide == 6 || currentGuide == 7 || 
-            currentGuide == 9 || currentGuide == 10 || currentGuide == 11 || currentGuide == 12 || currentGuide == 13) //guides with OK buttons
+            currentGuide == 9 || currentGuide == 10 || currentGuide == 14 || currentGuide == 15 || currentGuide == 16) //guides with OK buttons
         {
             if (currentGuide == guideNumBreakpointRestriction)
             {
