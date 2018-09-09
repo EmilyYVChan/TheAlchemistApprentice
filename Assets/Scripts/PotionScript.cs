@@ -46,9 +46,9 @@ public class PotionScript : MonoBehaviour {
 		} else {
 			HideAndShowInputsOutputs (true);
 
-			foreach (GameObject formula in formulae) {
-				formula.SetActive (true);
-			}
+			//foreach (GameObject formula in formulae) {
+				//formula.SetActive (true);
+			//}
 		}
 	}
 	
@@ -101,26 +101,17 @@ public class PotionScript : MonoBehaviour {
 			}
 
 			// display formula in dialogue
-			UpdateDialogue ();
+			//UpdateDialogue (); // -- do not display formula in dialogue anymore - 7/09/2018
 
-			// disable buttons behind the dialogue
-			DisableButtons();
+			UpdateFormula ();
 		}
 		else if (currentCost - (costOfInspectionPerFormula * inputs.Count) < 0){
+
 			// show warning if mana is 0
 			dialogue.SetActive (true);
 
-			// clear existing children
-			foreach (Transform child in dialogue.transform)
-			{
-				if (child.gameObject.tag.Equals("Formula"))
-				{
-					child.gameObject.SetActive (false);
-				}
-			}
-
-			// show message
-			dialogue.transform.Find("Warning").gameObject.SetActive(true);
+			// disable buttons behind the dialogue
+			DisableButtons();
 		}
     }
 		
@@ -144,13 +135,27 @@ public class PotionScript : MonoBehaviour {
 		}
 	}
 
+	private void UpdateFormula(){
+		GameObject formulaWrapper = GameObject.Find("Formula");
+
+		// clear currently showing formula
+		foreach (Transform f in formulaWrapper.transform)
+		{
+			if (formulae.Contains (f.gameObject)) {
+				f.gameObject.SetActive (true);
+			} else {
+				f.gameObject.SetActive (false);
+			}
+		}
+	}
+
 	private void DisableButtons()
 	{
 		Button exitBtn = GameObject.Find ("ExitBtn").GetComponent<Button>();
 		exitBtn.interactable = false;
-		Button diagnoseBtn = GameObject.Find ("DiagnoseBtn").GetComponent<Button>();
-		diagnoseBtn.interactable = false;
-		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
-		nextBtn.interactable = false;
+		//Button diagnoseBtn = GameObject.Find ("DiagnoseBtn").GetComponent<Button>();
+		//diagnoseBtn.interactable = false;
+		//Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
+		//nextBtn.interactable = false;
 	}
 }
