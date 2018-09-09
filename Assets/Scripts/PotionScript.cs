@@ -39,10 +39,7 @@ public class PotionScript : MonoBehaviour {
 
 		if (!LevelData.isPotionInspected (this.gameObject.name)) {
 			HideAndShowInputsOutputs (false);
-
-			foreach (GameObject formula in formulae) {
-				formula.SetActive (false);
-			}
+			HideFormula ();
 		} else {
 			HideAndShowInputsOutputs (true);
 		}
@@ -51,6 +48,13 @@ public class PotionScript : MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		
+	}
+
+	public void HideFormula(){
+
+		foreach (GameObject formula in formulae) {
+			formula.SetActive (false);
+		}
 	}
 
 	public void HideAndShowInputsOutputs(bool isVisible){

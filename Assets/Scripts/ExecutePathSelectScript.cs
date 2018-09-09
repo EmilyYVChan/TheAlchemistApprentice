@@ -142,7 +142,9 @@ public class ExecutePathSelectScript : MonoBehaviour
 			DisplayActualInputOutput (potion, matchingIndex);
 
 			// change breakpoint text colour to indicate it has been executed
-			potion.ChangeBreakpointTextColour();
+			//potion.ChangeBreakpointTextColour(); // instead of changing colour, show potion formula 
+			potion.HideBreakpointText ();
+			potion.UpdateFormula();
 			potion.ClearBreakpoint ();
 
 			// add cost for displaying actual inputs and outputs
@@ -168,6 +170,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
 			ep.ClearBreakpoint ();
 			ep.HideBreakpointText();
+			ep.HideFormula ();
 		}
 
 		// disable box collider on potions not involved in this path
