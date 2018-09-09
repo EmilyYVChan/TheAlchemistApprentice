@@ -135,7 +135,7 @@ public class PotionScript : MonoBehaviour {
 		}
 	}
 
-	public void UpdateFormula(){
+	private void UpdateFormula(){
 		GameObject formulaWrapper = GameObject.Find("Formula");
 
 		// clear currently showing formula

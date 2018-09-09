@@ -73,7 +73,29 @@ public class ExecutePotionScript : PotionScript
 		} 
 		// potion executed
 		else if (potionExecuted){
-				UpdateFormula();	
+			ShowFormula (LevelData.getCurrentActivePath());
+		}
+	}
+
+	public void ShowFormula(int currentPathIndex){
+		// the correct formula to be displayed should be the one named with potionName_pathIndex
+		GameObject formulaWrapper = GameObject.Find("Formula");
+
+		// clear currently showing formula
+		foreach (Transform f in formulaWrapper.transform)
+		{
+				f.gameObject.SetActive (false);
+		}
+
+		// show the formula that corresponds to the current path
+		if (formulae.Count > 1) {
+			foreach (GameObject f in formulae) {
+				if (f.name.Equals(this.name+"_"+currentPathIndex)){
+					f.SetActive(true);
+				}
+			}
+		}else{
+			formulae[0].SetActive(true);				
 		}
 	}
 
