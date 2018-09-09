@@ -27,9 +27,9 @@ public class DialogueScript : MonoBehaviour {
 	{
 		Button exitBtn = GameObject.Find ("ExitBtn").GetComponent<Button>();
 		exitBtn.interactable = true;
-		Button diagnoseBtn = GameObject.Find ("DiagnoseBtn").GetComponent<Button>();
-		diagnoseBtn.interactable = true;
-		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
-		nextBtn.interactable = true;
+//		Button diagnoseBtn = GameObject.Find ("DiagnoseBtn").GetComponent<Button>();
+//		diagnoseBtn.interactable = true;
+//		Button nextBtn = GameObject.Find ("NextBtn").GetComponent<Button>();
+//		nextBtn.interactable = true;
 	}
 }
