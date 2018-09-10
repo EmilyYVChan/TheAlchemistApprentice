@@ -56,8 +56,9 @@ public class ExecutePotionScript : PotionScript
 			// minus one extra because player is trying to set brkpt on THIS object 
 			tempCurrentMana = LevelData.getCurrentMana () - GetAllBreakpoints () - 1; 
 		}
-	
-		if ((!LevelData.isPotionExecuted (new PotionPathIndexPair (this.gameObject.name, LevelData.getCurrentActivePath ()))) && (tempCurrentMana >= 0)) {
+		bool potionExecuted = LevelData.isPotionExecuted (new PotionPathIndexPair (this.gameObject.name, LevelData.getCurrentActivePath ())); 
+		// potion not executed but enough mana
+		if (!potionExecuted && (tempCurrentMana >= 0)) {
 			Debug.Log ("not executed!!");
 			hasBreakpoint = !hasBreakpoint;
 			breakpointText.SetActive (hasBreakpoint);
@@ -66,8 +67,35 @@ public class ExecutePotionScript : PotionScript
 			if (!runOneStepBtn.interactable) {
 				ExecutePathSelectScript.ClearPotionStepCount ();
 			}
-		} else if (tempCurrentMana < 0) {
+		} else if (!potionExecuted &&(tempCurrentMana < 0)) {
+			// potion executed but not enough mana
 			dialogue.SetActive (true);
+		} 
+		// potion executed
+		else if (potionExecuted){
+			ShowFormula (LevelData.getCurrentActivePath());
+		}
+	}
+
+	public void ShowFormula(int currentPathIndex){
+		// the correct formula to be displayed should be the one named with potionName_pathIndex
+		GameObject formulaWrapper = GameObject.Find("Formula");
+
+		// clear currently showing formula
+		foreach (Transform f in formulaWrapper.transform)
+		{
+				f.gameObject.SetActive (false);
+		}
+
+		// show the formula that corresponds to the current path
+		if (formulae.Count > 1) {
+			foreach (GameObject f in formulae) {
+				if (f.name.Equals(this.name+"_"+currentPathIndex)){
+					f.SetActive(true);
+				}
+			}
+		}else{
+			formulae[0].SetActive(true);				
 		}
 	}
 

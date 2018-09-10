@@ -39,22 +39,22 @@ public class PotionScript : MonoBehaviour {
 
 		if (!LevelData.isPotionInspected (this.gameObject.name)) {
 			HideAndShowInputsOutputs (false);
-
-			foreach (GameObject formula in formulae) {
-				formula.SetActive (false);
-			}
+			HideFormula ();
 		} else {
 			HideAndShowInputsOutputs (true);
-
-			//foreach (GameObject formula in formulae) {
-				//formula.SetActive (true);
-			//}
 		}
 	}
 	
 	// Update is called once per frame
 	public void Update () {
 		
+	}
+
+	public void HideFormula(){
+
+		foreach (GameObject formula in formulae) {
+			formula.SetActive (false);
+		}
 	}
 
 	public void HideAndShowInputsOutputs(bool isVisible){
@@ -86,6 +86,7 @@ public class PotionScript : MonoBehaviour {
     public virtual void OnMouseDown()
 	{
 		int currentCost = LevelData.getCurrentMana ();
+		// show formula if mana is enough or potion has been studied before
 		if ((currentCost - (costOfInspectionPerFormula * inputs.Count) >= 0) || LevelData.isPotionInspected(this.gameObject.name)) {
 
 			HideAndShowInputsOutputs (true);
@@ -106,8 +107,7 @@ public class PotionScript : MonoBehaviour {
 			UpdateFormula ();
 		}
 		else if (currentCost - (costOfInspectionPerFormula * inputs.Count) < 0){
-
-			// show warning if mana is 0
+			Debug.Log ("show diag");
 			dialogue.SetActive (true);
 
 			// disable buttons behind the dialogue

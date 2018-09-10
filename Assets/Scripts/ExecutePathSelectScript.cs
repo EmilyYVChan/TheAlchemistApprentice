@@ -21,7 +21,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 	void Start ()
 	{
 		// decide on current path index
-		currentPathIndex =  GetCurrentPathIndex();
+		currentPathIndex =  CalculateCurrentPathIndex();
 		int index = pathIndex.IndexOf (currentPathIndex);
 		currentPathObjects = pathObjects [index].list;
 
@@ -63,7 +63,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 		isActive = true;
 		ToggleActiveFlagOnOtherInputs ();
 
-		currentPathIndex =  GetCurrentPathIndex();
+		currentPathIndex =  CalculateCurrentPathIndex();
 		int index = pathIndex.IndexOf (currentPathIndex);
 		currentPathObjects = pathObjects [index].list;
 		//===================================================
@@ -138,11 +138,12 @@ public class ExecutePathSelectScript : MonoBehaviour
 			// hide original inputs and outputs 	
 			HideOriginalInputOutput (potion, matchingIndex);
 
-			// display actual inputs and outputs
-			DisplayActualInputOutput (potion, matchingIndex);
+			// display actual inputs and outputs AND formula
+			DisplayActualInputOutputAndFormula (potion, matchingIndex);
 
 			// change breakpoint text colour to indicate it has been executed
-			potion.ChangeBreakpointTextColour();
+			//potion.ChangeBreakpointTextColour(); // instead of changing colour, show potion formula 
+			potion.HideBreakpointText ();
 			potion.ClearBreakpoint ();
 
 			// add cost for displaying actual inputs and outputs
@@ -168,6 +169,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 			ExecutePotionScript ep = gameObject.GetComponent<ExecutePotionScript> ();
 			ep.ClearBreakpoint ();
 			ep.HideBreakpointText();
+			ep.HideFormula ();
 		}
 
 		// disable box collider on potions not involved in this path
@@ -188,19 +190,24 @@ public class ExecutePathSelectScript : MonoBehaviour
 		}	
 	}
 
-	private void DisplayActualInputOutput(ExecutePotionScript potion, int index){
+	private void DisplayActualInputOutputAndFormula(ExecutePotionScript potion, int index){
 		Debug.Log ("potion to display: " + potion.gameObject.name);
+		//show actual input
 		List<GameObject> actualInputs = potion.actualInputs [index].list;
 		foreach (GameObject actualInput in actualInputs) {
 			actualInput.SetActive (true);
 			//actualInput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
 		}
 
+		//show actual output
 		List<GameObject> actualOutputs = potion.actualOutputs [index].list;
 		foreach (GameObject actualOutput in actualOutputs) {
 			actualOutput.SetActive (true);
 			//actualOutput.GetComponent<SpriteRenderer>().color =  new Color (1f, 1f, 1f, 1f); // reset to non-transparent
 		}
+
+		//show actual formula
+		potion.ShowFormula(currentPathIndex);
 	}
 
 	private void PopulatePreviousOutputs(ExecutePotionScript potion, int index){
@@ -270,7 +277,7 @@ public class ExecutePathSelectScript : MonoBehaviour
 		return (ExecutePotionScript.GetAllBreakpoints () > 0);
 	}
 
-	private int GetCurrentPathIndex(){
+	private int CalculateCurrentPathIndex(){
 		List<int> tempPathIndex = pathIndex;
 		foreach (GameObject otherInput in otherInputs) {
 			ExecutePathSelectScript epss = otherInput.GetComponent<ExecutePathSelectScript> ();

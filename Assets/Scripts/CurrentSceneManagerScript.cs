@@ -31,9 +31,9 @@ public class CurrentSceneManagerScript : MonoBehaviour {
 	void Update () {
 		costTextUI.text = LevelData.getCurrentMana().ToString();
 
-		if (int.Parse(costTextUI.text) == 0) {
-			disableAllPotionCollider ();
-		}
+		//if (int.Parse(costTextUI.text) == 0) {
+			//disableAllPotionCollider ();
+		//}
 	}
 
     void disableAllPotionCollider(){
