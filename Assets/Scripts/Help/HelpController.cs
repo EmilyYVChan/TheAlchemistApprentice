@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HelpManager : MonoBehaviour {
+public class HelpController : MonoBehaviour {
 
     public GameObject overviewViewTab;
     public GameObject studyViewTab;
     public GameObject operateViewTab;
+    public GameObject repairViewTab;
     public GameObject overviewViewJournal;
     public GameObject studyViewJournal;
     public GameObject operateViewJournal;
+    public GameObject repairViewJournal;
     public GameObject canvasHelp;
     public GameObject graph;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         canvasHelp.SetActive(false);
         overviewViewJournal.SetActive(false);
         studyViewJournal.SetActive(false);
         operateViewJournal.SetActive(false);
+        repairViewJournal.SetActive(false);
     }
 
     // Update is called once per frame
@@ -29,6 +33,7 @@ public class HelpManager : MonoBehaviour {
         activateOverviewView();
         deactivateStudyView();
         deactivateOperateView();
+        deactivateRepairView();
         graph.SetActive(false);
     }
     public void closeHelp()
@@ -42,6 +47,7 @@ public class HelpManager : MonoBehaviour {
         activateOverviewView();
         deactivateStudyView();
         deactivateOperateView();
+        deactivateRepairView();
     }
 
     public void openStudyTab()
@@ -49,6 +55,7 @@ public class HelpManager : MonoBehaviour {
         deactivateOverviewView();
         activateStudyView();
         deactivateOperateView();
+        deactivateRepairView();
     }
 
     public void openOperateTab()
@@ -56,6 +63,15 @@ public class HelpManager : MonoBehaviour {
         deactivateOverviewView();
         deactivateStudyView();
         activateOperateView();
+        deactivateRepairView();
+    }
+
+    public void openRepairTab()
+    {
+        deactivateOverviewView();
+        deactivateStudyView();
+        deactivateOperateView();
+        activateRepairView();
     }
 
     private void activateOverviewView()
@@ -98,5 +114,19 @@ public class HelpManager : MonoBehaviour {
         operateViewJournal.SetActive(false);
         operateViewTab.GetComponent<Image>().color = new Color32(120, 120, 120, 255);
         operateViewTab.GetComponentInChildren<Text>().color = new Color32(120, 120, 120, 255);
+    }
+
+    private void activateRepairView()
+    {
+        repairViewJournal.SetActive(true);
+        repairViewTab.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        repairViewTab.GetComponentInChildren<Text>().color = new Color32(255, 255, 255, 255);
+    }
+
+    private void deactivateRepairView()
+    {
+        repairViewJournal.SetActive(false);
+        repairViewTab.GetComponent<Image>().color = new Color32(120, 120, 120, 255);
+        repairViewTab.GetComponentInChildren<Text>().color = new Color32(120, 120, 120, 255);
     }
 }
