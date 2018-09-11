@@ -6,10 +6,20 @@ using UnityEngine.UI;
 public class DiagnosePotionScript : ExecutePotionScript {
 	public bool isFault;
 	public GameObject canvasResult;
+	Text costTextUI;
 
 	// Use this for initialization
 	public override void Start (){
+		costTextUI = GameObject.Find("Cost").GetComponent<Text>();
 		base.Start ();
+	}
+
+	void Update () {
+		costTextUI.text = LevelData.getCurrentMana().ToString();
+
+		if (int.Parse(costTextUI.text) == 0) {
+			disableAllPotionCollider ();
+		}
 	}
 
 	public override void OnMouseDown()
@@ -42,9 +52,16 @@ public class DiagnosePotionScript : ExecutePotionScript {
 			}
 
 		} else {
-			Text costTextUI = GameObject.Find("Cost").GetComponent<Text>();
+			
 			LevelData.addCost(int.Parse(costTextUI.text) * -1);
 			dialogue.SetActive (true);
+		}
+	}
+
+	private void disableAllPotionCollider(){
+		GameObject[] potions = GameObject.FindGameObjectsWithTag ("Potion");
+		foreach (GameObject gameObject in potions) {
+			gameObject.GetComponent<BoxCollider2D> ().enabled = false;
 		}
 	}
 }
