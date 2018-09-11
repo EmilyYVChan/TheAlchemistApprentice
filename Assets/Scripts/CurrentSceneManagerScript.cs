@@ -36,13 +36,6 @@ public class CurrentSceneManagerScript : MonoBehaviour {
 		//}
 	}
 
-    void disableAllPotionCollider(){
-		GameObject[] potions = GameObject.FindGameObjectsWithTag ("Potion");
-		foreach (GameObject gameObject in potions) {
-			gameObject.GetComponent<BoxCollider2D> ().enabled = false;
-		}
-	}
-
 	bool currentlyInDiagnose(){
 		// diagnose scenes have index 7.8.9
 		return (SceneManager.GetActiveScene ().buildIndex > 6);
