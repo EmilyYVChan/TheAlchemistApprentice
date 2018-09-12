@@ -26,6 +26,7 @@ public class TutorialManagerExecute : MonoBehaviour {
     private int guideNumRunOneStep1 = 5;
     private int guideNumRunOneStep2 = 8;
     private int guideNumRunOneStep3 = 13;
+    private int guideNumRepair = 17;
 
     // Use this for initialization
     void Start()
@@ -50,11 +51,14 @@ public class TutorialManagerExecute : MonoBehaviour {
             if (hit.collider != null)
             {
                 string hitColliderGameObjectName = hit.collider.gameObject.name;
+                Debug.Log("hitColliderGameObjectName = " + hitColliderGameObjectName);
                 if ((hitColliderGameObjectName == "waterInput1" && currentGuide == guideNumChooseInput1) ||
                     (hitColliderGameObjectName == "air" && currentGuide == guideNumChooseInput2) ||
                     (hitColliderGameObjectName == "RedPotion" && currentGuide == guideNumSetBreakpoint3) ||
                     (hitColliderGameObjectName == "BluePotion" && currentGuide == guideNumSetBreakpoint1) || 
-                    (hitColliderGameObjectName == "PinkPotion" && currentGuide == guideNumSetBreakpoint2))
+                    (hitColliderGameObjectName == "PinkPotion" && currentGuide == guideNumSetBreakpoint2) ||
+                    (hitColliderGameObjectName == "Repair" && currentGuide == guideNumRepair)
+                    )
                 {
                     moveToNextTutorialGuide();
                 }

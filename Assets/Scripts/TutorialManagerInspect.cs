@@ -60,7 +60,9 @@ public class TutorialManagerInspect : MonoBehaviour {
             if (hit.collider != null)
             {
                 string hitColliderGameObjectName = hit.collider.gameObject.name;
-                if ((hitColliderGameObjectName == "RedPotion" && currentGuide == 0) || (hitColliderGameObjectName == "BluePotion" && currentGuide == 2))
+                if ((hitColliderGameObjectName == "RedPotion" && currentGuide == 0) || 
+                    (hitColliderGameObjectName == "BluePotion" && currentGuide == 2) || 
+                    hitColliderGameObjectName == "Operate" && currentGuide == 4)
                 {
                     moveToNextTutorialGuide();
                 }
