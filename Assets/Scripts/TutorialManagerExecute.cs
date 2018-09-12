@@ -50,7 +50,6 @@ public class TutorialManagerExecute : MonoBehaviour {
             if (hit.collider != null)
             {
                 string hitColliderGameObjectName = hit.collider.gameObject.name;
-                Debug.Log(hitColliderGameObjectName);
                 if ((hitColliderGameObjectName == "waterInput1" && currentGuide == guideNumChooseInput1) ||
                     (hitColliderGameObjectName == "air" && currentGuide == guideNumChooseInput2) ||
                     (hitColliderGameObjectName == "RedPotion" && currentGuide == guideNumSetBreakpoint3) ||
@@ -83,7 +82,7 @@ public class TutorialManagerExecute : MonoBehaviour {
             go.SetActive(false);
         }
     }
-
+    /*
     private void disableEveryOtherBoxCollider()
     {
         foreach (BoxCollider2D b in allBoxCollidersInScene)
@@ -104,6 +103,7 @@ public class TutorialManagerExecute : MonoBehaviour {
             b.enabled = true;
         }
     }
+    */
 
     private void updateComponentActiveness()
     {
@@ -122,12 +122,14 @@ public class TutorialManagerExecute : MonoBehaviour {
                     handPointingToPot3.SetActive(false);
                 }
             }
-            disableEveryOtherBoxCollider();
+            //disableEveryOtherBoxCollider();
         }
+        /*
         else
         {
             enableAllBoxCollider();
         }
+        */
 
         if (currentGuide == -1) { return; }
         tutorialGuides[currentGuide].SetActive(true);
