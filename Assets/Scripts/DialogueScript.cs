@@ -21,6 +21,18 @@ public class DialogueScript : MonoBehaviour {
 	{
 		dialogue.SetActive (false);
 		EnableButtons ();
+
+		// set ManaWarning to be the default display message in Operate Stages
+		// ONLY operate stage has ManaWarning and PathWarning messages. Other stages only have Warning message
+		foreach (Transform child in dialogue.transform)
+		{
+			if (child.gameObject.name.Equals ("ManaWarning")) {
+				child.gameObject.SetActive (true);
+			} 
+			else if (child.gameObject.name.Equals ("PathWarning")) {
+				child.gameObject.SetActive (false);				
+			}
+		}
 	}
 
 	private void EnableButtons()

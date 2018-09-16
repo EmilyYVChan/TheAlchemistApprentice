@@ -48,32 +48,50 @@ public class ExecutePotionScript : PotionScript
 
 	public override void OnMouseDown()
 	{
-		int tempCurrentMana;
-		if (hasBreakpoint) {
-			// plus one because player is trying to clear brkpt on THIS object
-			tempCurrentMana = LevelData.getCurrentMana() - GetAllBreakpoints () + 1; 
-		} else {
-			// minus one extra because player is trying to set brkpt on THIS object 
-			tempCurrentMana = LevelData.getCurrentMana () - GetAllBreakpoints () - 1; 
-		}
 		bool potionExecuted = LevelData.isPotionExecuted (new PotionPathIndexPair (this.gameObject.name, LevelData.getCurrentActivePath ())); 
-		// potion not executed but enough mana
-		if (!potionExecuted && (tempCurrentMana >= 0)) {
-			Debug.Log ("not executed!!");
-			hasBreakpoint = !hasBreakpoint;
-			breakpointText.SetActive (hasBreakpoint);
-			Button runOneStepBtn = GameObject.Find ("RunStepBtn").GetComponent<Button> ();
-			runOneStepBtn.interactable = (GetAllBreakpoints () != 0);
-			if (!runOneStepBtn.interactable) {
-				ExecutePathSelectScript.ClearPotionStepCount ();
+		Debug.Log ("executed? : " + potionExecuted);
+		if (ExecutePathSelectScript.PotionIsOnCurrentPath (this.gameObject) && !potionExecuted) {
+			// if the potion being clicked on is on the selected control flow path
+
+			int tempCurrentMana;
+			if (hasBreakpoint) {
+				// plus one because player is trying to clear brkpt on THIS object
+				tempCurrentMana = LevelData.getCurrentMana () - GetAllBreakpoints () + 1; 
+			} else {
+				// minus one extra because player is trying to set brkpt on THIS object 
+				tempCurrentMana = LevelData.getCurrentMana () - GetAllBreakpoints () - 1; 
 			}
-		} else if (!potionExecuted &&(tempCurrentMana < 0)) {
-			// potion executed but not enough mana
-			dialogue.SetActive (true);
-		} 
-		// potion executed
-		else if (potionExecuted){
-			ShowFormula (LevelData.getCurrentActivePath());
+
+			// potion not executed but enough mana
+			if ((tempCurrentMana >= 0)) {
+				hasBreakpoint = !hasBreakpoint;
+				breakpointText.SetActive (hasBreakpoint);
+				Button runOneStepBtn = GameObject.Find ("RunStepBtn").GetComponent<Button> ();
+				runOneStepBtn.interactable = (GetAllBreakpoints () != 0);
+				if (!runOneStepBtn.interactable) {
+					ExecutePathSelectScript.ClearPotionStepCount ();
+				}
+			} else {
+				// potion not executed but not enough mana
+				dialogue.SetActive (true);
+			} 
+		}// potion executed
+		else if (potionExecuted) {
+			ShowFormula (LevelData.getCurrentActivePath ());
+		}
+		// show warning diaglogue if the potion selected in not on the current control flow path NOR executed
+		else {
+			dialogue.SetActive(true);
+			foreach (Transform child in dialogue.transform)
+			{
+				if (child.gameObject.name.Equals ("ManaWarning")) {
+					child.gameObject.SetActive (false);
+				} 
+				else if (child.gameObject.name.Equals ("PathWarning")) {
+					child.gameObject.SetActive (true);				
+				}
+			}
+
 		}
 	}
 

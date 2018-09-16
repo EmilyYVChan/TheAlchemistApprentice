@@ -14,16 +14,23 @@ public class ExecutePathSelectScript : MonoBehaviour
 	private static int potionStepCount = 0;
 	private List<List<Sprite>> previousOutputs = new List<List<Sprite>>();
 	private Button runOneStepBtn;
-	private List<GameObject> currentPathObjects;
+	private static List<GameObject> currentPathObjects;
 	private int currentPathIndex;
 
 	// Use this for initialization
 	void Start ()
 	{
 		// decide on current path index
-		currentPathIndex =  CalculateCurrentPathIndex();
-		int index = pathIndex.IndexOf (currentPathIndex);
-		currentPathObjects = pathObjects [index].list;
+		// only the active / currently selected inputs need to compute the currentPathIndex and currentPathObjects
+		if (isActive){
+			currentPathIndex =  CalculateCurrentPathIndex();
+			int index = pathIndex.IndexOf (currentPathIndex);
+			currentPathObjects = pathObjects [index].list;
+
+			foreach (GameObject g in currentPathObjects) {
+				Debug.Log ("name: " + g.name);
+			}
+		}
 
 		//===================================================
 
@@ -174,13 +181,16 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 		// disable box collider on potions not involved in this path
 		// enable box collider on potions involved in this path (in case it has been disabled previously)
-		foreach (GameObject potion in potions){
+
+		//!!!!!!!!!!!!!! do not disable collider - show dialogue instead - 16/09/18
+
+		/*foreach (GameObject potion in potions){
 			if (!currentPathObjects.Contains (potion)) {
 				potion.GetComponent<BoxCollider2D> ().enabled = false;
 			} else {
 				potion.GetComponent<BoxCollider2D> ().enabled = true;
 			}
-		}
+		}*/
 	}
 
 	private void ToggleActiveFlagOnOtherInputs(){
@@ -317,6 +327,13 @@ public class ExecutePathSelectScript : MonoBehaviour
 
 	public static void ClearPotionStepCount(){
 		potionStepCount = 0;
+	}
+
+	public static bool PotionIsOnCurrentPath(GameObject potion){
+		if (currentPathObjects.Contains (potion)) {
+			return true;
+		}
+		return false;
 	}
 }
 
